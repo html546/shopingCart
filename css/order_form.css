@@ -1,0 +1,164 @@
+body,html{
+    background: #f6f7f8;
+}
+#app{
+    padding-top: 40px;
+    overflow-y: scroll;
+}
+.mint-header{
+   background: #fff;
+   color: #333;
+   border-bottom: 1px solid #ebebeb;
+}
+.person_message{
+    width: 100%;
+    height: 70px;
+    background: #fff;
+    padding: 0 16px;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+}
+.person_message .message_top,.person_message .message_bottom{
+    overflow: hidden;
+}
+.person_message .message_top p,.person_message .message_bottom p{
+    float: left;
+    line-height: 25px;
+    font-size: 13px;
+    color: #333;
+    margin-top: 7px;
+}
+.person_message .message_top p:nth-child(2){
+    margin-left: 105px;
+}
+.right_arrow_icon{
+    position: absolute;
+    right: 15px;
+    top: 29px;
+}
+.line_below{
+    width: 100%;
+    height: 5px;
+    background: url(../images/line.png) no-repeat center;
+    background-size: cover;
+}
+.order_content_1{
+    margin-top: 5px;
+}
+.mint-cell-text{
+    font-size: 13px;
+    color: #333;
+}
+.order_content_1 .mint-cell img{
+    margin-right: 8px;
+}
+/* .mint-cell{
+    border-bottom: 1px solid #f6f7f8;
+}
+.mint-cell-wrapper{
+    background-image: none;
+} */
+.order_panel{
+    width: 100%;
+    height: 94px;
+    background: #fff;
+}
+.order_panel>img{
+    width: 77px;
+    height: 77px;
+    margin-left: 14px;
+    margin-top: 8px;
+    float: left;
+}
+
+.panel_right{
+    width: 246px;
+    height: auto;
+    margin-left: 11px;
+    float: left;
+}
+.panel_right p{
+    font-size: 13px;
+    color: #333;
+    margin-top: 10px;
+}
+.panel_right p.format{
+    color: #b1b3b7;
+    font-size: 12px;
+    margin-top: 4px;
+}
+.panel_right p.price{
+    font-size: 14px;
+    color: #f74443;
+    margin-top: 7px;
+    float: left;
+}
+.panel_right p.num{
+    float: right;
+    font-size: 12px;
+    color: #b1b3b7;
+    margin-top: 3px;
+}
+.freight{
+    color: #fa4544;
+    font-size: 14px;
+}
+.order_content_2{
+    margin-top: 10px;
+    padding-bottom:48px;
+}
+.num_all{
+    font-size: 14px;
+    color: #b1b3b7;
+    line-height: 18px;
+}
+.price_all,.freight_all{
+    font-size: 14px;
+    color: #fa4544;
+    line-height: 18px;
+}
+.mint-switch-input:checked + .mint-switch-core{
+    border-color: #FF4D6A;
+    background-color: #FF4D6A;
+}
+.debt_text{
+    font-size: 12px;
+    color: #b1b3b7;
+    line-height: 18px;
+    margin-right: 26px;
+}
+.footer .mint-cell-wrapper .mint-cell-text{
+    margin-left: 86px;
+}
+@media screen and (min-width:320px) and (max-width:359px){
+    .panel_right{
+        width: 210px;
+        margin-left: 5px;
+    }
+    .footer .mint-cell-wrapper .mint-cell-text{
+        margin-left: 43px;
+    }
+}
+.order_content_2 .mint-field-core{
+    width: 78px;
+    height: 32px;
+    text-align: center;
+    background: #f7f7f7;
+    border-radius: 2px;
+}
+.footer .mint-cell-wrapper{
+    padding: 0 0 0 10px;
+}
+.footer .mint-cell-wrapper button{
+    height: 48px;
+    width: 130px;
+    border-radius: 0;
+}
+
+.actul_price{
+    margin-right: 16px;
+    font-size: 12px;
+    line-height: 18px;
+    color: #fa4544;
+}

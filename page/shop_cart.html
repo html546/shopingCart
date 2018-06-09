@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>购物车</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../node_modules/mint-ui/lib/style.css">
+    <link rel="stylesheet" href="../css/order_form.css">
+    <link rel="stylesheet" href="../css/shop_cart.css">
+</head>
+
+<body>
+    <div id="app">
+        <mt-header fixed title="购物车">
+            <mt-button slot="right" v-show="edit" @click="edit = !edit">编辑</mt-button>
+            <mt-button slot="right" v-show="!edit" @click="edit=!edit">取消</mt-button>
+        </mt-header>
+        <div class="page_center">
+            <div class="header_top" v-for="(item,index) in products">
+                <mt-cell :title="item.title">
+                    <img class="house" :src="item.avatar" slot="icon" width="16" height="16" alt="">
+                </mt-cell>
+                <mt-cell-swipe title="" :right="[
+                {
+                    content:'删除',
+                    style:{background:'#F74443',color:'#fff'},
+                    handler(){remove(index)}
+                   }
+                ] ">
+                    <div class="order_panel">
+                        <div class="checkbox_group">
+                            <input type="checkbox" class="truly_checkbox" @change="checkOne" v-model="item.isSelected">
+                            <span class="false_checkbox"></span>
+                        </div>
+                        <img :src="item.avatar2" alt="">
+                        <div class="panel_right">
+                            <p>{{item.content}}</p>
+                            <p class="format">{{item.format}}</p>
+                            <p class="price">￥{{item.price}}</p>
+                            <p class="num" v-show="edit">×{{item.num}}</p>
+                            <p class="scaler" v-show="!edit">
+                                <button @click="reduce(item)">-</button>
+                                <input type="number" :value="item.num">
+                                <button @click="add(item)">+</button>
+                            </p>
+                        </div>
+                    </div>
+                </mt-cell-swipe>
+            </div>
+        </div>
+        <div class="all_checkbox">
+            <div class="checkbox_group">
+                <input type="checkbox" id="checkAll" class="truly_checkbox" v-model="checkAll2" @change="checkAll">
+                <span class="false_checkbox"></span>
+                <label for="checkAll">全选</label>
+            </div>
+            <p>合计:￥{{price_all}}</p>
+            <button @click="balance">去结算</button>
+        </div>
+        <mt-tabbar v-model="selected">
+            <mt-tab-item id="首页">
+                <img src="../images/tab_icon1.png" width="20" height="20" alt="" slot="icon"> 首页
+            </mt-tab-item>
+            <mt-tab-item id="服务1">
+                <img src="../images/tab_icon2.png" width="20" height="20" alt="" slot="icon"> 服务
+            </mt-tab-item>
+            <mt-tab-item id="服务2">
+                <img src="../images/tab_icon3.png" width="20" height="20" alt="" slot="icon"> 服务
+            </mt-tab-item>
+            <mt-tab-item id="购物车">
+                <img src="../images/tab_icon4.png" width="20" height="20" alt="" slot="icon"> 购物车
+            </mt-tab-item>
+            <mt-tab-item id="我的">
+                <img src="../images/tab_icon5.png" width="20" height="20" alt="" slot="icon"> 我的
+            </mt-tab-item>
+        </mt-tabbar>
+    </div>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="../node_modules/mint-ui/lib/index.js"></script>
+    <script>
+        let vm = new Vue({
+            el: "#app",
+            data: {
+                selected: '购物车',
+                products: [
+                    { id: 1, title: '小伟墙材', avatar: '../images/house2.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板1', format: '蓝色30mm', price: 11.50, num: 5, isSelected: false },
+                    { id: 2, title: '小伟墙材', avatar: '../images/house2.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板2', format: '蓝色30mm', price: 11.50, num: 5, isSelected: false },
+                    { id: 3, title: '小伟墙材', avatar: '../images/house2.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板3', format: '蓝色30mm', price: 11.50, num: 5, isSelected: false }
+                ],
+                edit: true,
+                checkAll2: false
+            },
+            computed: {
+                price_all() {
+                    return this.products.reduce((prev, next) => {
+                        if (!next.isSelected) return prev;
+                        return prev + next.price * next.num
+                    }, 0)
+                }
+            },
+            methods: {
+                checkAll() {
+                    console.log(this.checkAll2);
+                    this.products.forEach(item => {
+                        item.isSelected = this.checkAll2;
+                    })
+                },
+                checkOne() {
+                    this.checkAll2 = this.products.every(item => item.isSelected);
+                },
+                remove(index) {
+                    // console.log(index);
+                    this.products.splice(index, 1);
+                },
+                reduce(item){
+                    if(item.num==1) return;
+                    item.num--;
+                },
+                add(item){
+                    item.num++;
+                },
+                balance(){
+                    window.location.href="./address.html";
+                }
+            },
+           
+        })
+    </script>
+</body>
+
+</html>

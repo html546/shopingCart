@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>支付</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../node_modules/mint-ui/lib/style.css">
+    <link rel="stylesheet" href="../css/payoff.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="payoff_head">
+            <mt-header fixed title="支付">
+                <a href="./order_form.html" slot="left">
+                    <mt-button icon="back"></mt-button>
+                </a>
+            </mt-header>
+        </div>
+        <div class="pay_message">
+            <mt-cell title="商品总数">
+                <span>共{{sum}}件</span>
+            </mt-cell>
+            <mt-cell title="商品总价">
+                <span>￥{{price_all | toFixed}}</span>
+            </mt-cell>
+            <mt-cell title="总运费">
+                <span>￥{{freight_all | toFixed}}</span>
+            </mt-cell>
+            <mt-cell title="白条支付">
+                <span>￥{{debt_all | toFixed}}</span>
+            </mt-cell>
+            <mt-cell title="应付总价">
+                <span class="truly_pay">￥{{actul_all | toFixed}}</span>
+            </mt-cell>
+        </div>
+        <div class="pay_methods">
+            <!-- <mt-radio title='选择支付方式' align="right" v-model="pay_methods" :options="options">
+            </mt-radio> -->
+            <p>选择支付方式</p>
+            <div class="radio_group" v-for="item in options" :key="item.name">
+                <img :src="item.icon" width="20" height="20" alt="">
+                <label :for="item.name">{{item.label}}</label>
+                <label class="radio_1">
+                    <input type="radio" class="trulyRadio" :id="item.name" :value="item.value" v-model="picked" @change="show_value">
+                    <span class="falseRadio"></span>
+                </label>
+            </div>
+        </div>
+        <button class="confirm_pay" @click="confirm_pay">确认支付</button>
+    </div>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="../node_modules/mint-ui/lib/index.js"></script>
+    <script>
+        let vm = new Vue({
+            el: "#app",
+            data: {
+                sum: 5,
+                price_all: 57.50,
+                freight_all: 15.00,
+                debt_all: 32.50,
+                actul_all: 72.50,
+                pay_methods: '',
+                picked:'',
+                options: [
+                    {
+                        label: '余额支付',
+                        value: 'balabce',
+                        name:'one',
+                        icon:'../images/icon1.png'
+                    },
+                    {
+                        label: '支付宝支付',
+                        value: 'Alipay',
+                        name:'two',
+                        icon:'../images/icon2.png'
+                    },
+                    {
+                        label: '微信支付',
+                        value: 'weChat',
+                        name:'three',
+                        icon:'../images/icon3.png'
+                    },
+                    {
+                        label: '银联支付',
+                        value: 'Unionpay',
+                        name:'four',
+                        icon:'../images/icon4.png'
+                    },
+                    {
+                        label: '好友代付',
+                        value: 'Good_friends',
+                        name:'five',
+                        icon:'../images/icon5.png'
+                    }
+                ]
+            },
+            filters:{
+                toFixed(value){
+                    return value.toFixed(2);
+                }
+            },
+            methods:{
+                show_value(e){
+                    console.log(e.target.value);
+                },
+                confirm_pay(){
+                    window.location.href="./shop_cart.html";
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>

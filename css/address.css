@@ -1,0 +1,84 @@
+html,body{
+    background: #f6f7f8;
+}
+#app .mint-header {
+    background-color: #fff;
+    color: #333;
+    border-bottom: 1px solid #ebebeb;
+}
+
+.address_group {
+    margin-top: 40px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.address_group .address1 {
+    box-sizing: border-box;
+    padding: 0 16px;
+    width: 100%;
+    height: 82px;
+    border-bottom: 1px solid #ebebeb;
+}
+
+.address_group .address1 p {
+    color: #333;
+    font-size: 13px;
+    line-height: 22px;
+}
+
+.address_group .address1 .address1_group {
+    width: 92%;
+    float: left;
+}
+
+.address_group .address1 .radio_1 {
+    display: inline-block;
+    line-height: 44px;
+    position: relative;
+    float: right;
+    width: 16px;
+    height: 16px;
+}
+
+.address_group .address1 .radio_1 input[type='radio'] {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 33px;
+    vertical-align: bottom;
+    opacity: 0;
+}
+
+.falseRadio {
+    background: url(../images/radio2.png) no-repeat center;
+    background-size: cover;
+    display: block;
+    width: 16px;
+    height: 16px;
+    float: right;
+    top: 33px;
+    right: 15px;
+    position: absolute;
+}
+
+.trulyRadio:checked+.falseRadio {
+    background: url(../images/radio1.png) no-repeat center;
+    background-size: cover;
+}
+
+.address_group .address1 .address1_group p:first-child {
+    margin-top: 12px;
+}
+#app .add_address{
+    width: 100%;
+    height: 44px;
+    background: #fa4544;
+    color: #fff;
+    font-size: 16px;
+    line-height: 44px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border: none;
+}

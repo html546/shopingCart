@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>选择收货地址</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../node_modules/mint-ui/lib/style.css">
+    <link rel="stylesheet" href="../css/address.css">
+</head>
+
+<body>
+    <div id="app">
+        <mt-header fixed title="选择收货地址">
+            <a href="./shop_cart.html" slot="left">
+                <mt-button icon="back"></mt-button>
+            </a>
+        </mt-header>
+        <div class="address_group">
+            <div class="address1" v-for="item in addresses">
+                <div class="address1_group">
+                    <p>{{item.name}}</p>
+                    <p>{{item.tel}}</p>
+                    <p>{{item.address}}</p>
+                </div>
+                <label class="radio_1">
+                    <input type="radio" class="trulyRadio" :value="item.value" v-model="picked" @change="show_value">
+                    <span class="falseRadio"></span>
+                </label>
+            </div>
+        </div>
+        <button class="add_address">添加新地址</button>
+    </div>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="../node_modules/mint-ui/lib/index.js"></script>
+    <script>
+        let vm = new Vue({
+            el: "#app",
+            data: {
+                addresses: [
+                    { name: '张强', tel: '13823532943', address: '山东省临沂市兰山区金雀山路与陶然路90号', value: '地址1' },
+                    { name: '张强', tel: '13823532943', address: '山东省临沂市兰山区金雀山路与陶然路90号', value: '地址2' }
+                ],
+                picked: ''
+            },
+            
+            methods: {
+                show_value(e) {
+                    console.log(e.target.value);
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

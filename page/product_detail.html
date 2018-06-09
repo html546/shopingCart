@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品详情页</title>
+    <script src="../js/adapt.js"></script>
+    <link rel="stylesheet" href="../css/reset.css">
+    <!-- <link rel="stylesheet" href="../css/adapt.css"> -->
+    <link rel="stylesheet" href="../css/product_detail.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_694915_0zjez76evbvb1emi.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <a href="javascript:history.back(-1);" class="iconfont icon-zuojiantou"></a>
+            <div class="header_tab">
+                <a class="tab-item active" href="javascript:;">商品</a>
+                <a class="tab-item" href="javascript:;">详情</a>
+                <a class="tab-item" href="javascript:;">评价</a>
+            </div>
+        </header>
+        <div class="content">
+            <img :src="goods_info.goods_img" alt="">
+            <div class="buy_limit" v-if="goods_info.is_on_sale">
+                <div class="price">
+                    <div class="price_left">
+                        <p>￥
+                            <span>{{goods_info.shop_price}}</span>
+                        </p>
+                        <del>￥{{goods_info.market_price}}</del>
+                        <div class="box">
+                            <p>合作</p>
+                        </div>
+                    </div>
+                    <div class="time_right">
+                        <div class="hour"></div>
+                        <div class="min"></div>
+                        <div class="sec"></div>
+                    </div>
+                </div>
+                <div class="spec">
+                    <div class="spec_left">
+                        <p class="spec_left_content">
+                            {{goods_info.goods_name}}
+                        </p>
+                    </div>
+                    <div class="spec_right">
+                        <img src="../images/transparent_heart.png" v-show="follow" @click="follow=!follow" alt="">
+                        <img src="../images/red_heart.png" v-show="!follow" @click="follow=!follow" alt="">
+                        <p>关注</p>
+                    </div>
+                </div>
+            </div>
+            <div class="buy_normal" v-if="!goods_info.is_on_sale">
+                <div class="spec">
+                    <div class="spec_left">
+                        <p class="spec_left_content">
+                            {{goods_info.goods_name}}
+                        </p>
+                    </div>
+                    <div class="spec_right">
+                        <img src="../images/transparent_heart.png" v-show="follow" @click="follow=!follow" alt="">
+                        <img src="../images/red_heart.png" v-show="!follow" @click="follow=!follow" alt="">
+                        <p>关注</p>
+                    </div>
+                </div>
+                <div class="normal_price">
+                    <p>
+                        <span>￥</span>{{goods_info.shop_price}}</p>
+                    <div class="box">
+                        <p>合作</p>
+                    </div>
+                </div>
+            </div>
+            <a href="javascript:;">
+                <div class="num">
+                    <p class="num_left">选择规格数量</p>
+                    <span class="iconfont icon-youjiantou-01 num_right"></span>
+                </div>
+            </a>
+            <div class="evaluate">
+                <a href="javascript:;">
+                    <div class="evaluate_top num">
+                        <p class="num_left">店铺评价</p>
+                        <span class="iconfont icon-youjiantou-01 num_right"></span>
+                        <p class="numof_evaluate">
+                            <span>{{shop_comment.commentCount}}</span>条评论</p>
+                    </div>
+                </a>
+                <div class="evaluate_bottom">
+                    <div class="head">
+                        <img :src="shop_comment.head_pic" alt="">
+                        <p>{{shop_comment.newComment[0].user_id}}</p>
+                    </div>
+                    <div class="evaluate_content">
+                        <p>{{shop_comment.newComment[0].content}}</p>
+                    </div>
+                    <div class="evaluate_date">
+                        <p>{{shop_comment.newComment[0].add_time}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="product_detail">
+                <img :src="goods_gallery[0].image_path" alt="">
+            </div>
+            <div class="cart">
+                <div class="cart_left">
+                    <div class="cart_group">
+                        <a href="javascript:;">
+                            <div class="message">
+                                <div class="iconfont icon-message"></div>
+                                <p>私聊</p>
+                            </div>
+                        </a>
+                        <a href="javascript:;">
+                            <div class="shop">
+                                <div class="iconfont icon-dianpu"></div>
+                                <p>店铺</p>
+                            </div>
+                        </a>
+                        <a href="javascript:;">
+                            <div class="cart2">
+                                <div class="iconfont icon-gouwuche"></div>
+                                <p>购物车</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="cart_right" @click="cart_show = !cart_show">
+                    <a href="javascript:;">加入购物车</a>
+                </div>
+            </div>
+        </div>
+        <div class="shop_cart" v-if="cart_show">
+            <div class="shop_cart_top clearfix">
+                <img src="../images/avatar.png" alt="" class="avatar">
+                <div class="shop_cart_right">
+                    <p>{{goods_info.goods_name}}</p>
+                    <p>￥ {{goods_info.shop_price}}</p>
+                    <del>￥ {{goods_info.market_price}}</del>
+                </div>
+                <i class="iconfont icon-Close close_cart" @click="cart_show=!cart_show"></i>
+            </div>
+            <div class="shop_cart_format">
+                <p>规格</p>
+                <div class="button_group">
+                    <button v-for="(item,index) in format" :class="{active:item.isActived}" @click="changeActive(item,index)">{{item.item}}</button>
+                    <!-- <button class="active">规格2</button> -->
+                </div>
+            </div>
+            <div class="shop_cart_sum">
+                <p>数量</p>
+                <div class="num_button_group">
+                    <button class="reduce" :class="{active:reduceActive&&!addActive}" @click="reduce">-</button>
+                    <p>{{num}}</p>
+                    <button class="add" :class="{active:addActive&&!reduceActive}" @click="add">+</button>
+                </div>
+            </div>
+            <button class="sure" @click="goform" >确定</button>
+        </div>
+    </div>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/axios/dist/axios.js"></script>
+    <script src="../js/adapt.js"></script>
+    <script src="../js/global.js"></script>
+    <script>
+        $(function () {
+            $('.header_tab>a').click(function (e) {
+                $(this).addClass('active').siblings().removeClass('active');
+            });
+        })
+        function countTime() {
+            var date = new Date();
+            var now = date.getTime();
+            var endDate = new Date("2018-06-09 23:23:23");
+            var end = endDate.getTime();
+            var leftTime = end - now;
+            if (leftTime >= 0) {
+                h = toFixed(Math.floor(leftTime / 1000 / 60 / 60 % 24));
+                m = toFixed(Math.floor(leftTime / 1000 / 60 % 60));
+                s = toFixed(Math.floor(leftTime / 1000 % 60));
+            }
+            function toFixed(value) {
+                if (value < 10) {
+                    return '0' + value;
+                } else {
+                    return value;
+                }
+            }
+            // alert(123);
+            $('.hour').html(h);
+            $('.min').html(m);
+            $('.sec').html(s);
+        }
+        setInterval(function () {
+            countTime();
+        }, 1000)
+        let vm = new Vue({
+            el: "#app",
+            created(){
+                var goods_info = '';
+                var shop_comment = '';
+                var goods_gallery = '';
+                var format = '';
+                /* 获取商品信息 */
+                $.ajax({
+                    url:BaseUrl+'/index.php/Api/GoodsApi/goodsDetail',
+                    dataType:'json',
+                    type:'post',
+                    async:false,
+                    data:{
+                        'goods_id':'1'
+                    },
+                    success(data){
+                        // console.log(data);
+                        goods_info = data.data.goods_info;
+                        shop_comment = data.data.shop_comment;
+                        goods_gallery = data.data.goods_gallery;
+                        // format = data.data.goods_spec;
+                    },
+                    error(err){
+                        console.log(err);
+                    }
+                })
+                $.ajax({
+                    url:BaseUrl+'/index.php/Api/GoodsApi/goodsSpec',
+                    dataType:'json',
+                    type:'post',
+                    async:false,
+                    data:{
+                        'goods_id':'1'
+                    },
+                    success(data){
+                        // console.log(data);
+                        format = data.data['0'].item_list;
+                    },
+                    error(err){
+                        console.log(err);
+                    }
+                })
+                this.goods_info = goods_info;
+                this.shop_comment = shop_comment;
+                this.shop_comment.head_pic = BaseUrl + shop_comment.newComment[0].head_pic;
+                this.goods_gallery = goods_gallery;
+                this.format = format;
+                // this.format = Object.assign({},this.format,{})
+                Vue.set(this.format,'isActived',false);
+                console.log(this.format);
+            },
+            data: {
+                follow: true,
+                shop_comment:'',
+                buy_limit: '',
+                /* format: [
+                    { name: '规格1', isActived: false },
+                    { name: '规格2', isActived: true }
+                ], */
+                format:'',
+                cart_show: false,
+                num: 1,
+                reduceActive: false,
+                addActive: false,
+                goods_info:'',
+                goods_gallery:'',
+                // format:''
+            },
+            methods: {
+                changeActive(item, index) {
+                    this.format.forEach((item, index) => {
+                        if (item.isActived == true) {
+                            item.isActived = false;
+                        }
+                    })
+                    // Vue.set(this.format, index, { name: '规格' + Number(index + 1), isActived: true });
+                },
+                add() {
+                    if (this.num == 20) {
+                        this.addActive = true;
+                        return;
+                    } else {
+                        this.reduceActive = false;
+                        this.num++;
+                    }
+                },
+                reduce() {
+                    if (this.num == 1) {
+                        this.reduceActive = true;
+                        return;
+                    } else {
+                        this.addActive = false;
+                        this.num--;
+                    }
+                },
+                goform(){
+                    this.cart_show=!this.cart_show;
+                    window.location.href="./order_form.html";
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

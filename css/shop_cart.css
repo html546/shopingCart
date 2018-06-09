@@ -1,0 +1,163 @@
+html, body {
+    background: #f6f7f8;
+}
+
+#app {
+    padding: 0;
+}
+
+.order_panel>img {
+    margin-left: 34px;
+}
+
+.mint-header {
+    background-color: #fff;
+    color: #333;
+}
+.page_center{
+    height: calc(100% - 144px);
+    overflow-y: scroll;
+    margin-top: 40px;
+    position: absolute;
+    width: 100%;
+}
+/* .header_top:nth-child(1){
+} */
+.header_top .mint-cell {
+    background-color: #fdfdfc;
+    margin-top: 5px;
+    background-image: none;
+}
+
+.header_top .house {
+    margin-right: 8px;
+}
+
+.header_top .mint-cell-text {
+    font-size: 13px;
+    color: #383838;
+}
+
+.header_top .mint-cell-swipe .mint-cell-wrapper {
+    padding: 0;
+}
+
+.header_top .mint-cell-swipe .mint-cell-title {
+    flex: 0;
+}
+
+.header_top .mint-cell-swipe .mint-cell-value {
+    width: 100%;
+}
+
+.checkbox_group {
+    position: relative;
+}
+
+.truly_checkbox {
+    top: 36px;
+    left: 12px;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    vertical-align: bottom;
+    opacity: 0;
+    z-index: 100;
+}
+
+.false_checkbox {
+    top: 36px;
+    left: 12px;
+    position: absolute;
+    float: left;
+    width: 18px;
+    height: 18px;
+    background: url(../images/false_checkbox.png) no-repeat center;
+    background-size: cover;
+    display: block;
+}
+
+.truly_checkbox:checked+.false_checkbox {
+    background: url(../images/truly_checkbox.png) no-repeat center;
+    background-size: cover;
+}
+
+.all_checkbox .checkbox_group label {
+    position: absolute;
+    left: 45px;
+    color: #333;
+    font-size: 14px;
+    line-height: 49px;
+}
+
+.all_checkbox .checkbox_group {
+    width: 78px;
+    height: 49px;
+    float: left;
+}
+
+@media screen and (min-width:320px) and (max-width:374px) {
+    .truly_checkbox {
+        left: 4px;
+    }
+    .false_checkbox {
+        left: 4px;
+    }
+    .order_panel>img {
+        margin-left: 22px;
+    }
+    .all_checkbox .checkbox_group label {
+        left: 27px;
+    }
+}
+
+.all_checkbox {
+    width: 100%;
+    height: 49px;
+    background: #fff;
+    position: fixed;
+    bottom: 55px;
+}
+
+.all_checkbox .truly_checkbox {
+    top: 15px;
+}
+
+.all_checkbox .false_checkbox {
+    top: 15px;
+}
+
+.all_checkbox p {
+    font-size: 16px;
+    color: #101010;
+    float: left;
+    line-height: 49px;
+    margin-left: 38px;
+}
+
+.all_checkbox button {
+    width: 93px;
+    height: 49px;
+    background: #f74443;
+    float: right;
+    border: none;
+    color: #fff;
+}
+.scaler{
+    float: right;
+}
+.scaler button{
+    width: 20px;
+    height: 20px;
+    margin-top: 0;
+    background: #fa4544;
+    color: #fff;
+    border: none;
+}
+.scaler input{
+    width: 50px;
+    height: 20px;
+    border: none;
+    line-height: 20px;
+    text-align: center;
+}

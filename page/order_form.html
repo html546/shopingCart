@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>填写订单</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../node_modules/mint-ui/lib/style.css">
+    <link rel="stylesheet" href="../css/order_form.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_694915_0zjez76evbvb1emi.css">
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <mt-header fixed title="填写订单">
+            <a href="./product_detail.html" slot="left">
+                <mt-button icon="back"></mt-button>
+            </a>
+        </mt-header>
+        <a href="javascript:;">
+            <div class="person_message">
+                <div class="message_top">
+                    <p>{{name}}</p>
+                    <p>{{tel}}</p>
+                </div>
+                <div class="message_bottom">
+                    <p>{{address}}</p>
+                </div>
+                <span class="iconfont icon-youjiantou-01 right_arrow_icon"></span>
+            </div>
+        </a>
+        <div class="line_below"></div>
+        <div class="order_content_1" v-for="(item,index) in order_content">
+            <mt-cell :title='item.title'>
+                <img :src="item.avatar" width="16" height="16" slot="icon" alt="">
+            </mt-cell>
+            <div class="order_panel">
+                <img :src="item.avatar2" alt="">
+                <div class="panel_right">
+                    <p>{{item.content}}</p>
+                    <p class="format">{{item.format}}</p>
+                    <p class="price">￥{{item.price}}</p>
+                    <p class="num">×{{item.num}}</p>
+                </div>
+            </div>
+            <mt-field placeholder="给卖家留言" v-model="item.leave_message" :key='index'></mt-field>
+            <mt-cell title="运费">
+                <span class="freight">￥{{item.freight}}</span>
+            </mt-cell>
+        </div>
+        <div class="order_content_2">
+            <mt-cell title="商品总数">
+                <span class="num_all">共{{num_all}}件</span>
+            </mt-cell>
+            <mt-cell title="商品总价">
+                <span class="price_all">￥{{price_all | toFixed}}</span>
+            </mt-cell>
+            <mt-cell title="总运费">
+                <span class="freight_all">￥{{freight_all | toFixed}}</span>
+            </mt-cell>
+            <mt-cell title="打欠条">
+                <span class="debt_text">(当前欠条可打￥{{debt}})</span>
+                <mt-switch v-model="debt_value" @change="show_debt"></mt-switch>
+            </mt-cell>
+            <mt-cell title="请输入欠条金额">
+                <mt-field v-model="debt_money" @input="entry"></mt-field>
+            </mt-cell>
+        </div>
+        <div class="footer">
+            <mt-cell title="实际应付:" style="position: fixed;bottom: 0;width: 100%;">
+                <span class="actul_price">￥{{actul_price | toFixed}}</span>
+                <mt-button type="danger" @click="skip">提交订单</mt-button>
+            </mt-cell>
+        </div>
+    </div>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="../node_modules/mint-ui/lib/index.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                name: '张强',
+                tel: 13823532943,
+                address: '山东省临沂市兰山区金雀山路与陶然路90号',
+                order_content: [
+                    { title: '小伟墙材', avatar: '../images/house.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板', format: '蓝色30mm', price: '115.00', num: 5, leave_message: '', freight: '15.00' },
+                    // { title: '小伟墙材', avatar: '../images/house.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板', format: '蓝色30mm', price: '115.00', num: 5, leave_message: '',freight: '15.00' }
+                ],
+                leave_message: '',
+                debt: 500,
+                debt_value: true,
+                debt_money: ''
+            },
+            computed: {
+                num_all() {
+                    return this.order_content.reduce(function (prev, next) {
+                        return prev + next.num;
+                    }, 0)
+                },
+                price_all() {
+                    return this.order_content.reduce(function (prev, next) {
+                        return prev + next.price * next.num;
+                    }, 0)
+                },
+                freight_all() {
+                    return this.order_content.reduce(function (prev, next) {
+                        return Number(prev) + Number(next.freight);
+                    }, 0)
+                },
+                actul_price(){
+                    return this.price_all + this.freight_all - this.debt_money;
+                }
+            },
+            filters: {
+                toFixed(value) {
+                    return value.toFixed(2);
+                }
+            },
+            methods: {
+                show_debt(event) {
+                    // 触发是否选中的事件，并得到状态
+                    console.log(event);
+                },
+                entry() {
+                    if(this.debt_money>this.price_all){
+                        this.$toast({
+                            message:'你输入的金额超出了商品总价了哦',
+                            duration:1000
+                        })
+                        this.debt_money = '';
+                    }
+                },
+                skip(){
+                    window.location.href='./payoff.html';
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
