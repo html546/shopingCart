@@ -11,10 +11,15 @@
     <!-- <link rel="stylesheet" href="../css/adapt.css"> -->
     <link rel="stylesheet" href="../css/product_detail.css">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_694915_0zjez76evbvb1emi.css">
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" v-cloak>
         <header>
             <a href="javascript:history.back(-1);" class="iconfont icon-zuojiantou"></a>
             <div class="header_tab">
@@ -146,7 +151,7 @@
                 <i class="iconfont icon-Close close_cart" @click="cart_show=!cart_show"></i>
             </div>
             <div class="shop_cart_format">
-                <p>规格</p>
+                <p>{{format_name}}</p>
                 <div class="button_group">
                     <button v-for="(item,index) in format" :class="{active:item.isActived}" @click="changeActive(item,index)">{{item.item}}</button>
                     <!-- <button class="active">规格2</button> -->
@@ -237,7 +242,12 @@
                     },
                     success(data){
                         // console.log(data);
+                        format_name = data.data[0].item_name
                         format = data.data['0'].item_list;
+                        console.log(format);
+                       /*  format.forEach(item=>{
+                            item.push({isActived:false});
+                        }) */
                     },
                     error(err){
                         console.log(err);
@@ -249,7 +259,7 @@
                 this.goods_gallery = goods_gallery;
                 this.format = format;
                 // this.format = Object.assign({},this.format,{})
-                Vue.set(this.format,'isActived',false);
+                // Vue.set(this.format,'isActived',false);
                 console.log(this.format);
             },
             data: {
@@ -267,6 +277,7 @@
                 addActive: false,
                 goods_info:'',
                 goods_gallery:'',
+                format_name:''
                 // format:''
             },
             methods: {
