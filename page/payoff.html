@@ -25,16 +25,16 @@
                 <span>共{{sum}}件</span>
             </mt-cell>
             <mt-cell title="商品总价">
-                <span>￥{{price_all | toFixed}}</span>
+                <span>￥{{price_all}}</span>
             </mt-cell>
             <mt-cell title="总运费">
-                <span>￥{{freight_all | toFixed}}</span>
+                <span>￥{{freight_all}}</span>
             </mt-cell>
             <mt-cell title="白条支付">
-                <span>￥{{debt_all | toFixed}}</span>
+                <span>￥{{debt_all}}</span>
             </mt-cell>
             <mt-cell title="应付总价">
-                <span class="truly_pay">￥{{actul_all | toFixed}}</span>
+                <span class="truly_pay">￥{{actul_all}}</span>
             </mt-cell>
         </div>
         <div class="pay_methods">
@@ -55,45 +55,51 @@
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/vue/dist/vue.js"></script>
     <script src="../node_modules/mint-ui/lib/index.js"></script>
+    <script src="../js/global.js"></script>
     <script>
+        var sum = localStorage.getItem('num_all');
+        var price_all = localStorage.getItem('price_all');
+        var freight_all = localStorage.getItem('freight_all');
+        var debt_all = localStorage.getItem('debt_money');
+        var actul_all = localStorage.getItem('actul_price');
         let vm = new Vue({
             el: "#app",
             data: {
-                sum: 5,
-                price_all: 57.50,
-                freight_all: 15.00,
-                debt_all: 32.50,
-                actul_all: 72.50,
+                sum: sum,
+                price_all:price_all,
+                freight_all: freight_all,
+                debt_all: debt_all,
+                actul_all: actul_all,
                 pay_methods: '',
                 picked:'',
                 options: [
                     {
                         label: '余额支付',
-                        value: 'balabce',
+                        value: '4',
                         name:'one',
                         icon:'../images/icon1.png'
                     },
                     {
                         label: '支付宝支付',
-                        value: 'Alipay',
+                        value: '1',
                         name:'two',
                         icon:'../images/icon2.png'
                     },
                     {
                         label: '微信支付',
-                        value: 'weChat',
+                        value: '2',
                         name:'three',
                         icon:'../images/icon3.png'
                     },
                     {
                         label: '银联支付',
-                        value: 'Unionpay',
+                        value: '3',
                         name:'four',
                         icon:'../images/icon4.png'
                     },
                     {
                         label: '好友代付',
-                        value: 'Good_friends',
+                        value: '5',
                         name:'five',
                         icon:'../images/icon5.png'
                     }
@@ -106,10 +112,36 @@
             },
             methods:{
                 show_value(e){
-                    console.log(e.target.value);
+                    console.log(this.picked);
                 },
                 confirm_pay(){
-                    window.location.href="./shop_cart.html";
+                    if(this.picked ==''){
+                        vm.$toast({
+                            message:'请选择一种支付方式',
+                            position:'middle',
+                            duration:1000
+                        })
+                    }else{
+                        var order_sn = localStorage.getItem('order_sn');
+
+                        $.ajax({
+                            url:BaseUrl+'/index.php/Api/OrderApi/orderPay',
+                            type:'post',
+                            dataType:'json',
+                            data:{
+                                'token':'447879569860480420',
+                                'order_sn':order_sn,
+                                'pay_code':this.picked
+                            },
+                            success(data){
+                                console.log(data);
+                            },
+                            error(err){
+                                console.log(err);
+                            }
+                        })
+                    }
+                    // window.location.href="./shop_cart.html";
                 }
             }
         })

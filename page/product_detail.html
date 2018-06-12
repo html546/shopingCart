@@ -8,11 +8,12 @@
     <title>商品详情页</title>
     <script src="../js/adapt.js"></script>
     <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../node_modules/mint-ui/lib/style.css">
     <!-- <link rel="stylesheet" href="../css/adapt.css"> -->
     <link rel="stylesheet" href="../css/product_detail.css">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_694915_0zjez76evbvb1emi.css">
     <style>
-        [v-cloak]{
+        [v-cloak] {
             display: none;
         }
     </style>
@@ -154,7 +155,6 @@
                 <p>{{format_name}}</p>
                 <div class="button_group">
                     <button v-for="(item,index) in format" :class="{active:item.isActived}" @click="changeActive(item,index)">{{item.item}}</button>
-                    <!-- <button class="active">规格2</button> -->
                 </div>
             </div>
             <div class="shop_cart_sum">
@@ -165,12 +165,13 @@
                     <button class="add" :class="{active:addActive&&!reduceActive}" @click="add">+</button>
                 </div>
             </div>
-            <button class="sure" @click="goform" >确定</button>
+            <mt-button class="sure" @click.native="goform">确定</mt-button>
         </div>
     </div>
     <script src="../node_modules/vue/dist/vue.js"></script>
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/axios/dist/axios.js"></script>
+    <script src="../node_modules/mint-ui/lib/index.js"></script>
     <script src="../js/adapt.js"></script>
     <script src="../js/global.js"></script>
     <script>
@@ -182,7 +183,7 @@
         function countTime() {
             var date = new Date();
             var now = date.getTime();
-            var endDate = new Date("2018-06-09 23:23:23");
+            var endDate = new Date("2018-06-12 23:23:23");
             var end = endDate.getTime();
             var leftTime = end - now;
             if (leftTime >= 0) {
@@ -207,49 +208,50 @@
         }, 1000)
         let vm = new Vue({
             el: "#app",
-            created(){
+            created() {
                 var goods_info = '';
                 var shop_comment = '';
                 var goods_gallery = '';
                 var format = '';
                 /* 获取商品信息 */
                 $.ajax({
-                    url:BaseUrl+'/index.php/Api/GoodsApi/goodsDetail',
-                    dataType:'json',
-                    type:'post',
-                    async:false,
-                    data:{
-                        'goods_id':'1'
+                    url: BaseUrl + '/index.php/Api/GoodsApi/goodsDetail',
+                    dataType: 'json',
+                    type: 'post',
+                    async: false,
+                    data: {
+                        'goods_id': '1'
                     },
-                    success(data){
+                    success(data) {
                         // console.log(data);
                         goods_info = data.data.goods_info;
                         shop_comment = data.data.shop_comment;
                         goods_gallery = data.data.goods_gallery;
                         // format = data.data.goods_spec;
                     },
-                    error(err){
+                    error(err) {
                         console.log(err);
                     }
                 })
                 $.ajax({
-                    url:BaseUrl+'/index.php/Api/GoodsApi/goodsSpec',
-                    dataType:'json',
-                    type:'post',
-                    async:false,
-                    data:{
-                        'goods_id':'1'
+                    url: BaseUrl + '/index.php/Api/GoodsApi/goodsSpec',
+                    dataType: 'json',
+                    type: 'post',
+                    async: false,
+                    data: {
+                        'goods_id': '1'
                     },
-                    success(data){
+                    success(data) {
                         // console.log(data);
                         format_name = data.data[0].item_name
                         format = data.data['0'].item_list;
-                        console.log(format);
-                       /*  format.forEach(item=>{
-                            item.push({isActived:false});
-                        }) */
+                        format.forEach(item => {
+                            item.isActived = false;
+                            // Object.assign({},item,{isActived:false});
+                        })
+                        // console.log(format);
                     },
-                    error(err){
+                    error(err) {
                         console.log(err);
                     }
                 })
@@ -258,33 +260,55 @@
                 this.shop_comment.head_pic = BaseUrl + shop_comment.newComment[0].head_pic;
                 this.goods_gallery = goods_gallery;
                 this.format = format;
+                this.format_name = format_name;
                 // this.format = Object.assign({},this.format,{})
                 // Vue.set(this.format,'isActived',false);
-                console.log(this.format);
+                // console.log(this.format);
             },
             data: {
                 follow: true,
-                shop_comment:'',
+                shop_comment: '',
                 buy_limit: '',
                 /* format: [
                     { name: '规格1', isActived: false },
                     { name: '规格2', isActived: true }
                 ], */
-                format:'',
+                format: '',
                 cart_show: false,
                 num: 1,
                 reduceActive: false,
                 addActive: false,
-                goods_info:'',
-                goods_gallery:'',
-                format_name:''
+                goods_info: '',
+                goods_gallery: '',
+                format_name: ''
                 // format:''
             },
             methods: {
                 changeActive(item, index) {
-                    this.format.forEach((item, index) => {
-                        if (item.isActived == true) {
-                            item.isActived = false;
+                    this.format.forEach((item1, index) => {
+                        if (item1 == item) {
+                            // console.log(item);
+                            item1.isActived = true;
+                            $.ajax({
+                                url: BaseUrl + '/index.php/Api/GoodsApi/getGoodsSpecPrice',
+                                type: 'post',
+                                dataType: 'json',
+                                data: {
+                                    'goods_id': '1',
+                                    'spec_key': item1.item_id
+                                },
+                                success(data) {
+                                    // console.log(data);
+                                    // console.log(that);
+                                    vm.goods_info.shop_price = data.data.price;
+                                },
+                                error(err) {
+                                    console.log(err);
+                                }
+
+                            })
+                        } else {
+                            item1.isActived = false;
                         }
                     })
                     // Vue.set(this.format, index, { name: '规格' + Number(index + 1), isActived: true });
@@ -307,9 +331,50 @@
                         this.num--;
                     }
                 },
-                goform(){
-                    this.cart_show=!this.cart_show;
-                    window.location.href="./order_form.html";
+                goform() {
+                    var a = '';
+                    a = this.format.every(item => {
+                        return item.isActived == false;
+                    });
+
+                    if (a) {
+                        console.log(this);
+                        this.$toast({
+                            message: '请至少选择一种规格',
+                            position: 'bottom',
+                            duration: 1000
+                        });
+                        // alert(123);
+                    } else {
+                        var spec_key = '';
+                        this.format.forEach(item => {
+                            if (item.isActived) {
+                                spec_key = item.item_id;
+                            }
+                        })
+                        $.ajax({
+                            url: BaseUrl + '/index.php/Api/CartApi/addCart',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {
+                                token: '447879569860480420',
+                                goods_id: '1',
+                                spec_key: spec_key,
+                                buy_number: vm.num
+                            },
+                            success(data) {
+                                vm.$toast({
+                                    message: data.info,
+                                    position: 'bottom',
+                                    duration: 1000
+                                })
+                            },
+                            error(err) {
+                                console.log(err);
+                            }
+                        })
+                        this.cart_show = !this.cart_show;
+                    }
                 }
             }
         })

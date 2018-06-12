@@ -21,9 +21,9 @@
         <div class="address_group">
             <div class="address1" v-for="item in addresses">
                 <div class="address1_group">
-                    <p>{{item.name}}</p>
-                    <p>{{item.tel}}</p>
-                    <p>{{item.address}}</p>
+                    <p>{{item.consignee}}</p>
+                    <p>{{item.mobile}}</p>
+                    <p>{{item.address_info}}</p>
                 </div>
                 <label class="radio_1">
                     <input type="radio" class="trulyRadio" :value="item.value" v-model="picked" @change="show_value">
@@ -36,17 +36,36 @@
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/vue/dist/vue.js"></script>
     <script src="../node_modules/mint-ui/lib/index.js"></script>
+    <script src="../js/global.js"></script>
     <script>
         let vm = new Vue({
             el: "#app",
             data: {
-                addresses: [
+                /* addresses: [
                     { name: '张强', tel: '13823532943', address: '山东省临沂市兰山区金雀山路与陶然路90号', value: '地址1' },
                     { name: '张强', tel: '13823532943', address: '山东省临沂市兰山区金雀山路与陶然路90号', value: '地址2' }
-                ],
+                ], */
+                addresses:'',
                 picked: ''
             },
-            
+            created(){
+                $.ajax({
+                    url:BaseUrl+'/index.php/Api/UserCenterApi/getAddressList',
+                    dataType:'json',
+                    type:'post',
+                    data:{
+                        'token':'447879569860480420'
+                    },
+                    success(data){
+                        console.log(data.data);
+                        vm.addresses = data.data;
+                        // console.log(vm.addresses);
+                    },
+                    error(err){
+                        console.log(err);
+                    }
+                })
+            },
             methods: {
                 show_value(e) {
                     console.log(e.target.value);
