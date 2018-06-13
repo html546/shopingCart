@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>选择收货地址</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../node_modules/mint-ui/lib/style.css">
+    <link rel="stylesheet" href="../css/add_address.css">
+</head>
+
+<body>
+    <div id="app">
+        <mt-header fixed title="新增收货地址">
+            <a href="./address.html" slot="left">
+                <mt-button icon="back"></mt-button>
+            </a>
+            <mt-button slot="right" @click="save">保存</mt-button>
+        </mt-header>
+        <div class="add_form">
+            <mt-field label="收货人" v-model="consignee" placeholder="请填写收货人"></mt-field>
+            <mt-field label="联系电话" v-model="tel" placeholder="请填写电话"></mt-field>
+            <mt-cell title="所在地区" is-link @click.native="chose1">
+                <span class="district">{{value1}}</span>
+            </mt-cell>
+            <mt-field label="详细地址" type="textarea" v-model="address" rows="4" style="resize:none;"></mt-field>
+        </div>
+        <div class="make_default">
+            <div class="chose_default">
+                <p>设为默认地址</p>
+                <div class="checkbox_group">
+                    <input type="checkbox" class="true_check" v-model="check">
+                    <span class="falsy_check"></span>
+                </div>
+            </div>
+        </div>
+        <div class="popup">
+            <mt-popup v-model="popupVisible" position="bottom">
+                <div class="chose_area">
+                    <p class="title">所在地区
+                        <i class="close"></i>
+                    </p>
+                    <p class="chose_classify">
+                        <span class="active">请选择</span>
+                    </p>
+                    <div class="chose_content">
+
+                    </div>
+                </div>
+            </mt-popup>
+        </div>
+    </div>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="../node_modules/mint-ui/lib/index.js"></script>
+    <script src="../js/global.js"></script>
+    <script>
+        function request_area(e) {
+            var that = e;
+            $(function () {
+                var district = [];
+                $.ajax({
+                    url: BaseUrl + '/index.php/Api/PublicApi/getDistrictListGD',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        'keywords': '中国'
+                    },
+                    success(data) {
+                        var s = data.data.map((item) => {
+                            return '<p>' + item.name + '</p>';
+                        });
+                        $('.chose_content').append(s);
+                        province();
+                    },
+                    error(err) {
+                        console.log(err);
+                    }
+                })
+                function province() {
+                    $('.chose_content p').click(function () {
+                        var province_name = $(this).html();
+                        district.push(province_name);
+                        $('.chose_classify').children('span').removeClass('active').html(province_name);
+                        $('.chose_classify').append('<span class="active">请选择</span>')
+                        $.ajax({
+                            url: BaseUrl + '/index.php/Api/PublicApi/getDistrictListGD',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {
+                                'keywords': province_name,
+                            },
+                            success(data) {
+                                var s = data.data.map(item => {
+                                    return '<p>' + item.name + '</p>';
+                                })
+                                $('.chose_content').empty().append(s);
+                                city();
+                            },
+                            error(err) {
+                                console.log(err);
+                            }
+                        })
+                    })
+                }
+                function city() {
+                    $('.chose_content p').click(function () {
+                        var city_name = $(this).html();
+                        district.push('-' + city_name);
+                        $('.chose_classify').children('span').last().removeClass('active').html(city_name);
+                        $('.chose_classify').append('<span class="active">请选择</span>')
+                        $.ajax({
+                            url: BaseUrl + '/index.php/Api/PublicApi/getDistrictListGD',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {
+                                'keywords': city_name,
+                            },
+                            success(data) {
+                                var s = data.data.map(item => {
+                                    return '<p>' + item.name + '</p>';
+                                })
+                                $('.chose_content').empty().append(s);
+                                area();
+                            },
+                            error(err) {
+                                console.log(err);
+                            }
+                        })
+                    })
+                }
+                function area() {
+                    $('.chose_content p').click(function () {
+                        var area_name = $(this).html();
+                        district.push('-' + area_name);
+                        $('.chose_classify').children('span').last().removeClass('active').html(area_name);
+                        $('.chose_classify').append('<span class="active">请选择</span>')
+                        $.ajax({
+                            url: BaseUrl + '/index.php/Api/PublicApi/getDistrictListGD',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {
+                                'keywords': area_name,
+                            },
+                            success(data) {
+                                var s = data.data.map(item => {
+                                    return '<p>' + item.name + '</p>';
+                                })
+                                $('.chose_content').empty().append(s);
+                                street();
+                            },
+                            error(err) {
+                                console.log(err);
+                            }
+                        })
+                    })
+                }
+                function street() {
+                    $('.chose_content p').click(function () {
+                        var street_name = $(this).html();
+                        if (typeof (district) == 'string'&&district.split('-').length==4) {
+                            district = district.split('-');
+                            district.splice(3, 1);
+                            district.push(street_name);
+                            district = district.join('-');
+                            console.log(district);
+                            that.value1 = district;
+                        } else {
+                            district.push('-' + street_name);
+                            district = district.join('');
+                            that.value1 = district;
+                        }
+                        that.popupVisible = false;
+                        $('.chose_classify').children('span').last().html(street_name);
+                    })
+                }
+            })
+        }
+
+        let vm = new Vue({
+            el: "#app",
+            data: {
+                consignee: '',
+                tel: '',
+                check:false,
+                value1: '请选择',
+                popupVisible: false,
+                address:''
+            },
+            created() {
+                var that = this;
+                request_area(that);
+            },
+            methods: {
+                onValuesChange(picker, values) {
+                    this.value1 = picker.getValues().join();
+                },
+                chose1() {
+                    this.popupVisible = true;
+                },
+                save(){
+                    $.ajax({
+                        url:BaseUrl+'/index.php/Api/UserCenterApi/addEditAddress',
+                        type:'post',
+                        dataType:'json',
+                        data:{
+                            'token':'447879569860480420',
+                            'consignee':this.consignee,
+                            'mobile':this.tel,
+                            'province':this.value1.split('-').splice(0,1).join(),
+                            'city':this.value1.split('-').splice(1,1).join(),
+                            'district':this.value1.split('-').splice(2,1).join(),
+                            'town':this.value1.split('-').splice(3,1).join(),
+                            'address':this.address,
+                            'is_detault':this.check
+                        },
+                        success(data){
+                            console.log(data);
+                        },
+                        error(err){
+                            console.log(err);
+                        }
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

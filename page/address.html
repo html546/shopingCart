@@ -26,7 +26,7 @@
                     <p>{{item.address_info}}</p>
                 </div>
                 <label class="radio_1">
-                    <input type="radio" class="trulyRadio" :value="item.value" v-model="picked" @change="show_value">
+                    <input type="radio" class="trulyRadio" :value="item.address_info" v-model="picked" @change="show_value">
                     <span class="falseRadio"></span>
                 </label>
             </div>
@@ -41,10 +41,6 @@
         let vm = new Vue({
             el: "#app",
             data: {
-                /* addresses: [
-                    { name: '张强', tel: '13823532943', address: '山东省临沂市兰山区金雀山路与陶然路90号', value: '地址1' },
-                    { name: '张强', tel: '13823532943', address: '山东省临沂市兰山区金雀山路与陶然路90号', value: '地址2' }
-                ], */
                 addresses:'',
                 picked: ''
             },
@@ -59,7 +55,9 @@
                     success(data){
                         console.log(data.data);
                         vm.addresses = data.data;
-                        // console.log(vm.addresses);
+                        vm.addresses.forEach(item=>{
+                            item.is_default = 0;
+                        })
                     },
                     error(err){
                         console.log(err);
@@ -69,7 +67,8 @@
             methods: {
                 show_value(e) {
                     console.log(e.target.value);
-                }
+                },
+
             }
         })
     </script>
