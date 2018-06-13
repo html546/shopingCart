@@ -9,9 +9,8 @@
     <script src="../js/adapt.js"></script>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../node_modules/mint-ui/lib/style.css">
-    <!-- <link rel="stylesheet" href="../css/adapt.css"> -->
     <link rel="stylesheet" href="../css/product_detail.css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_694915_0zjez76evbvb1emi.css">
+    <!-- <link rel="stylesheet" href="//at.alicdn.com/t/font_694915_0zjez76evbvb1emi.css"> -->
     <style>
         [v-cloak] {
             display: none;
@@ -22,7 +21,7 @@
 <body>
     <div id="app" v-cloak>
         <header>
-            <a href="javascript:history.back(-1);" class="iconfont icon-zuojiantou"></a>
+            <a href="javascript:history.back(-1);" class="arrow_left"></a>
             <div class="header_tab">
                 <a class="tab-item active" href="javascript:;">商品</a>
                 <a class="tab-item" href="javascript:;">详情</a>
@@ -85,14 +84,14 @@
             <a href="javascript:;">
                 <div class="num">
                     <p class="num_left">选择规格数量</p>
-                    <span class="iconfont icon-youjiantou-01 num_right"></span>
+                    <span class="num_right"></span>
                 </div>
             </a>
             <div class="evaluate">
                 <a href="javascript:;">
                     <div class="evaluate_top num">
                         <p class="num_left">店铺评价</p>
-                        <span class="iconfont icon-youjiantou-01 num_right"></span>
+                        <span class="num_right"></span>
                         <p class="numof_evaluate">
                             <span>{{shop_comment.commentCount}}</span>条评论</p>
                     </div>
@@ -118,19 +117,19 @@
                     <div class="cart_group">
                         <a href="javascript:;">
                             <div class="message">
-                                <div class="iconfont icon-message"></div>
+                                <div class="message"></div>
                                 <p>私聊</p>
                             </div>
                         </a>
                         <a href="javascript:;">
                             <div class="shop">
-                                <div class="iconfont icon-dianpu"></div>
+                                <div class="store"></div>
                                 <p>店铺</p>
                             </div>
                         </a>
                         <a href="./shop_cart.html">
                             <div class="cart2">
-                                <div class="iconfont icon-gouwuche"></div>
+                                <div class="shop_cart1"></div>
                                 <p>购物车</p>
                             </div>
                         </a>
@@ -149,7 +148,7 @@
                     <p>￥ {{goods_info.shop_price}}</p>
                     <del>￥ {{goods_info.market_price}}</del>
                 </div>
-                <i class="iconfont icon-Close close_cart" @click="cart_show=!cart_show"></i>
+                <i class="close_cart" @click="cart_show=!cart_show"></i>
             </div>
             <div class="shop_cart_format">
                 <p>{{format_name}}</p>
@@ -183,7 +182,7 @@
         function countTime() {
             var date = new Date();
             var now = date.getTime();
-            var endDate = new Date("2018-06-12 23:23:23");
+            var endDate = new Date("2018-06-14 23:23:23");
             var end = endDate.getTime();
             var leftTime = end - now;
             if (leftTime >= 0) {
