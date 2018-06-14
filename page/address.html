@@ -31,7 +31,7 @@
                 </label>
             </div>
         </div>
-        <button class="add_address">添加新地址</button>
+        <button class="add_address" @click="add">添加新地址</button>
     </div>
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/vue/dist/vue.js"></script>
@@ -68,7 +68,9 @@
                 show_value(e) {
                     console.log(e.target.value);
                 },
-
+                add(){
+                    window.location.href="./add_address.html";
+                }
             }
         })
     </script>

@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../node_modules/mint-ui/lib/style.css">
     <link rel="stylesheet" href="../css/order_form.css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_694915_0zjez76evbvb1emi.css">
     <style>
         [v-cloak]{
             display: none;
@@ -108,7 +107,7 @@
                 // actul_price:''
             },
             created(){
-                var cart_id = localStorage.getItem(cart_id);
+                var cart_id = localStorage.getItem('cart_id');
                 $.ajax({
                     url:BaseUrl+'/index.php/Api/CartApi/cartConfirm',
                     type:'post',

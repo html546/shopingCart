@@ -223,7 +223,7 @@
                         'goods_id': '1'
                     },
                     success(data) {
-                        console.log(data);
+                        // console.log(data);
                         goods_info = data.data.goods_info;
                         shop_comment = data.data.shop_comment;
                         goods_gallery = data.data.goods_gallery;
@@ -295,12 +295,14 @@
                                 dataType: 'json',
                                 data: {
                                     'goods_id': '1',
-                                    'spec_key': item1.item_id
+                                    'spec_key': item1.item_id,
+                                    'token':'447879569860480420'
                                 },
                                 success(data) {
                                     // console.log(data);
                                     // console.log(that);
                                     vm.goods_info.shop_price = data.data.price;
+                                    vm.goods_info.storage = data.data.store_count;
                                 },
                                 error(err) {
                                     console.log(err);
