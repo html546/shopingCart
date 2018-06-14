@@ -492,6 +492,14 @@ header .header_tab a.active {
     float: left;
 }
 
+.shop_cart_right span {
+    float: right;
+    font-size: .26rem;
+    margin-top: .38rem;
+    margin-left: .16rem;
+    color: #b1b3b7;
+}
+
 .close_cart {
     /* position: absolute; */
     float: right;

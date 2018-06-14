@@ -147,6 +147,7 @@
                     <p>{{goods_info.goods_name}}</p>
                     <p>￥ {{goods_info.shop_price}}</p>
                     <del>￥ {{goods_info.market_price}}</del>
+                    <span style="float: right;">库存:{{goods_info.storage}}</span>
                 </div>
                 <i class="close_cart" @click="cart_show=!cart_show"></i>
             </div>
@@ -222,7 +223,7 @@
                         'goods_id': '1'
                     },
                     success(data) {
-                        // console.log(data);
+                        console.log(data);
                         goods_info = data.data.goods_info;
                         shop_comment = data.data.shop_comment;
                         goods_gallery = data.data.goods_gallery;

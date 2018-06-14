@@ -83,13 +83,6 @@
     <script src="../node_modules/mint-ui/lib/index.js"></script>
     <script src="../js/global.js"></script>
     <script>
-        /* var mixin = {
-            methods:{
-                aa(val){
-                    return val=='1'?1:0;
-                }
-            }
-        } */
         let vm = new Vue({
             el: "#app",
             // mixins:[mixin],
@@ -104,8 +97,8 @@
                     success(data) {
                         console.log(data);
                         vm.products_shop = data.data;
-                        vm.products_shop.forEach(item=>{
-                            item['goods_list'].forEach(item=>{
+                        vm.products_shop.forEach(item => {
+                            item['goods_list'].forEach(item => {
                                 item.is_selected = 0;
                             })
                         })
@@ -114,42 +107,22 @@
                         console.log(err);
                     }
                 })
+
             },
             data: {
                 selected: '购物车',
-                /* products: [
-                    { id: 1, title: '小伟墙材', avatar: '../images/house2.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板1', format: '蓝色30mm', price: 11.50, num: 5, isSelected: false },
-                    { id: 2, title: '小伟墙材', avatar: '../images/house2.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板2', format: '蓝色30mm', price: 11.50, num: 5, isSelected: false },
-                    { id: 3, title: '小伟墙材', avatar: '../images/house2.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板3', format: '蓝色30mm', price: 11.50, num: 5, isSelected: false }
-                ], */
                 edit: true,
                 checkAll2: false,
                 products_shop: '',
             },
             computed: {
                 price_all() {
-                    /* return this.products.reduce((prev, next) => {
-                        if (!next.isSelected) return prev;
-                        return prev + next.price * next.num
-                    }, 0) */
-                    // this.products_shop.filter(item=>{
-                    /* item.goods_list.reduce((prev,next)=>{
-                        return prev + next.buy_number * next.price;
-                    }) */
-                    // })
                     var price_all1 = 0;
                     for (let i = 0; i < this.products_shop.length; i++) {
-                        /* this.products_shop[i]['goods_list'].reduce((prev, next) => {
-                            if (next.is_selected == '1') {
-                                price_all1+= prev + next.buy_number_int * Number(next.price);
-                            } else {
-                                return;
-                            }
-                        }, 0) */
-                        this.products_shop[i]['goods_list'].forEach(item=>{
-                            if(item.is_selected == '1'){
-                                console.log(123);
-                                price_all1+=item.buy_number_int*Number(item.price);
+                        this.products_shop[i]['goods_list'].forEach(item => {
+                            if (item.is_selected == '1') {
+                                // console.log(123);
+                                price_all1 += item.buy_number_int * Number(item.price);
                             }
                         })
                     }
@@ -159,9 +132,6 @@
             methods: {
                 checkAll() {
                     console.log(this.checkAll2);
-                    /* this.products.forEach(item => {
-                        item.isSelected = this.checkAll2;
-                    }) */
                     this.products_shop.forEach(item => {
                         // console.log(item.goods_list);
                         item.goods_list.forEach(item1 => {
@@ -170,34 +140,23 @@
                     })
                 },
                 checkOne() {
-                    // this.checkAll2 = this.products.every(item => item.isSelected);
-                    /* this.checkAll2 = this.products_shop.forEach(item=>{
-                        console.log(item);
-                    }) */
                     var select_all = ''
                     for (let i = 0; i < this.products_shop.length; i++) {
-                        this.products_shop[i]['goods_list'].reduce((prev, next) => {
-                            return select_all = prev + next.is_selected;
-                        }, 0)
+                        /* this.products_shop[i]['goods_list'].reduce((prev, next) => {
+                            return select_all = prev + Number(next.is_selected);
+                        }, 0) */
+                        select_all+=this.products_shop[i]['goods_list'].every(item=>{
+                            return item.is_selected == 1;
+                        })
                     };
                     console.log(select_all);
-                    if (select_all != '0') {
+                    if (select_all == 'true') {
                         this.checkAll2 = true;
                     } else {
                         this.checkAll2 = false;
                     }
-                    // console.log(this.checkAll2);
                 },
                 remove(item1, index) {
-                    // console.log(index);
-                    // this.products.splice(index, 1);
-                    /* this.products_shop.forEach(item=>{
-                        item.forEach(item2=>{
-                            if(item2==item1){
-                                item.splice(index,1);
-                            }
-                        })
-                    }) */
                     console.log(item1);
                     console.log(index);
                     for (let i = 0; i < this.products_shop.length; i++) {
@@ -205,17 +164,18 @@
                             if (item2 == item1) {
                                 this.products_shop[i]['goods_list'].splice(index, 1);
                                 $.ajax({
-                                    url:BaseUrl+'/index.php/Api/CartApi/delCartGoods',
-                                    type:'post',
-                                    dataType:'json',
-                                    data:{
-                                        'token':'447879569860480420',
-                                        'cart_id':item2.cart_id
+                                    url: BaseUrl + '/index.php/Api/CartApi/delCartGoods',
+                                    type: 'post',
+                                    dataType: 'json',
+                                    data: {
+                                        'token': '447879569860480420',
+                                        'cart_id': item2.cart_id
                                     },
-                                    success(data){
+                                    success(data) {
                                         console.log(data);
+                                        remove_all();
                                     },
-                                    error(err){
+                                    error(err) {
                                         console.log(err);
                                     }
                                 })
@@ -224,24 +184,13 @@
                     }
                 },
                 reduce(item2) {
-                    // Number(item);
-                    /* item1 = Number(item1);
-                    console.log(item1); */
-                    /* vm.$nextTick(()=>{
-                        if(item1 == 1){
-                            return;
-                        }else{
-                            item1--;
-                        }
-                    }) */
-                    // console.log(item);
                     for (let i = 0; i < this.products_shop.length; i++) {
                         this.products_shop[i]['goods_list'].forEach(item => {
                             if (item == item2) {
                                 // console.log(item.buy_number_int);
-                                if(item.buy_number_int!=1){
+                                if (item.buy_number_int != 1) {
                                     item.buy_number_int--;
-                                }else{
+                                } else {
                                     return;
                                 }
                             }
@@ -249,33 +198,42 @@
                     }
                 },
                 add(item2) {
-                    // item = Number(item);
-                    /*  vm.$nextTick(()=>{
-                         item1++;
-                     })
-                     console.log(item1); */
-                    // console.log($(this));
-                    // $(this).prev("input[type='number']");
-                    // console.log(vm.$refs.myvalue);
                     for (let i = 0; i < this.products_shop.length; i++) {
                         this.products_shop[i]['goods_list'].forEach(item => {
                             if (item == item2) {
-                                // console.log(item.buy_number_int);
                                 item.buy_number_int++;
                             }
                         })
                     }
                 },
                 balance() {
-                    console.log(this.products_shop);
+                    // console.log(this.products_shop);
+                    var cart_id_group = [];
+                    this.products_shop.forEach(item=>{
+                        item.goods_list.forEach(item1=>{
+                            cart_id_group.push(item1.cart_id);
+                        })
+                    })
+                    cart_id_group = cart_id_group.join(',');
+                    console.log(cart_id_group);
+                    localStorage.setItem('cart_id',cart_id_group);
                     window.location.href = "./order_form.html";
                 },
             }
 
         })
-        /* function aa(val){
-            return val=='1'?true:false;
-        } */
+        function remove_all() {
+            console.log(123);
+            for (let i = 0; i < vm.products_shop.length; i++) {
+                console.log(vm.products_shop[i]);
+                if (vm.products_shop[i]['goods_list'].length == 0) {
+                    vm.$nextTick(()=>{
+                        vm.products_shop[i] = [];
+                        vm.$forceUpdate();
+                    })
+                }
+            }
+        }
     </script>
 </body>
 

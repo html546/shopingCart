@@ -20,7 +20,7 @@
 <body>
     <div id="app" v-cloak>
         <mt-header fixed title="填写订单">
-            <a href="./product_detail.html" slot="left">
+            <a href="./shop_cart.html" slot="left">
                 <mt-button icon="back"></mt-button>
             </a>
         </mt-header>
@@ -108,14 +108,15 @@
                 // actul_price:''
             },
             created(){
+                var cart_id = localStorage.getItem(cart_id);
                 $.ajax({
                     url:BaseUrl+'/index.php/Api/CartApi/cartConfirm',
                     type:'post',
                     dataType:'json',
                     data:{
                         'token':'447879569860480420',
-                        'cart_id':'102',
-                        'address_id':'166'
+                        'cart_id':cart_id,
+                        'address_id':'6'
                     },
                     success(data){
                         console.log(data);
