@@ -23,95 +23,51 @@
         <header>
             <a href="javascript:history.back(-1);" class="arrow_left"></a>
             <div class="header_tab">
-                <a class="tab-item active" href="./product_detail.html">商品</a>
+                <a class="tab-item" href="./product_detail.html">商品</a>
                 <a class="tab-item" href="./product_detail_content.html">详情</a>
-                <a class="tab-item" href="./product_detail_comment.html">评价</a>
+                <a class="tab-item active" href="./product_detail_comment.html">评价</a>
             </div>
         </header>
         <div class="content">
-            <img :src="goods_info.goods_img" alt="">
-            <div class="buy_limit" v-if="goods_info.is_on_sale">
-                <div class="price">
-                    <div class="price_left">
-                        <p>￥
-                            <span>{{goods_info.shop_price}}</span>
-                        </p>
-                        <del>￥{{goods_info.market_price}}</del>
-                        <div class="box">
-                            <p>合作</p>
-                        </div>
-                    </div>
-                    <div class="time_right">
-                        <div class="hour"></div>
-                        <div class="min"></div>
-                        <div class="sec"></div>
-                    </div>
-                </div>
-                <div class="spec">
-                    <div class="spec_left">
-                        <p class="spec_left_content">
-                            {{goods_info.goods_name}}
-                        </p>
-                    </div>
-                    <div class="spec_right">
-                        <img src="../images/transparent_heart.png" v-show="follow" @click="follow=!follow" alt="">
-                        <img src="../images/red_heart.png" v-show="!follow" @click="follow=!follow" alt="">
-                        <p>关注</p>
-                    </div>
-                </div>
-            </div>
-            <div class="buy_normal" v-if="!goods_info.is_on_sale">
-                <div class="spec">
-                    <div class="spec_left">
-                        <p class="spec_left_content">
-                            {{goods_info.goods_name}}
-                        </p>
-                    </div>
-                    <div class="spec_right">
-                        <img src="../images/transparent_heart.png" v-show="follow" @click="follow=!follow" alt="">
-                        <img src="../images/red_heart.png" v-show="!follow" @click="follow=!follow" alt="">
-                        <p>关注</p>
-                    </div>
-                </div>
-                <div class="normal_price">
-                    <p>
-                        <span>￥</span>{{goods_info.shop_price}}</p>
-                    <div class="box">
-                        <p>合作</p>
-                    </div>
-                </div>
-            </div>
-            <a href="javascript:;">
-                <div class="num">
-                    <p class="num_left">选择规格数量</p>
-                    <span class="num_right"></span>
-                </div>
-            </a>
-            <div class="evaluate">
-                <a href="javascript:;">
-                    <div class="evaluate_top num">
-                        <p class="num_left">店铺评价</p>
-                        <span class="num_right"></span>
-                        <p class="numof_evaluate">
-                            <span>{{shop_comment.commentCount}}</span>条评论</p>
-                    </div>
-                </a>
-                <div class="evaluate_bottom">
-                    <div class="head">
-                        <img :src="shop_comment.head_pic" alt="">
-                        <p>{{shop_comment.newComment[0].user_id}}</p>
-                    </div>
-                    <div class="evaluate_content">
-                        <p>{{shop_comment.newComment[0].content}}</p>
-                    </div>
-                    <div class="evaluate_date">
-                        <p>{{shop_comment.newComment[0].add_time}}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="product_detail">
-                <img v-for="item in goods_gallery" :src="item.image_path" alt="">
-            </div>
+           <div class="comments">
+               <div class="comments_block active" @click="getComment">
+                   <p>全部</p>
+                   <p>({{comments.commentCount}})</p>
+               </div>
+               <div class="comments_block" @click="getComment">
+                   <p>好评</p>
+                   <p>({{comments.likeCount}})</p>
+               </div>
+               <div class="comments_block" @click="getComment">
+                   <p>中评</p>
+                   <p>({{comments.medCount}})</p>
+               </div>
+               <div class="comments_block" @click="getComment">
+                   <p>差评</p>
+                   <p>({{comments.lowCount}})</p>
+               </div>
+               <div class="comments_block" @click="getComment">
+                   <p>晒图</p>
+                   <p>({{comments.imgCount}})</p>
+               </div>
+           </div>
+           <div class="comments_content">
+               <div class="comments_content_block">
+                   <div class="comments_content_top">
+                       <img src="../images/head2.png" alt="">
+                       <div class="head_message">
+                           <p>雨***</p>
+                           <img src="../images/star5.png" alt="">
+                       </div>
+                       <div class="comments_date">
+                           <p>2017-06-01</p>
+                       </div>
+                   </div>
+                   <div class="comments_content_bottom">
+                       <p>好评!</p>
+                   </div>
+               </div>
+           </div>
             <div class="cart">
                 <div class="cart_left">
                     <div class="cart_group">
@@ -179,32 +135,6 @@
                 $(this).addClass('active').siblings().removeClass('active');
             });
         })
-        function countTime() {
-            var date = new Date();
-            var now = date.getTime();
-            var endDate = new Date("2018-06-14 23:23:23");
-            var end = endDate.getTime();
-            var leftTime = end - now;
-            if (leftTime >= 0) {
-                h = toFixed(Math.floor(leftTime / 1000 / 60 / 60 % 24));
-                m = toFixed(Math.floor(leftTime / 1000 / 60 % 60));
-                s = toFixed(Math.floor(leftTime / 1000 % 60));
-            }
-            function toFixed(value) {
-                if (value < 10) {
-                    return '0' + value;
-                } else {
-                    return value;
-                }
-            }
-            // alert(123);
-            $('.hour').html(h);
-            $('.min').html(m);
-            $('.sec').html(s);
-        }
-        setInterval(function () {
-            countTime();
-        }, 1000)
         let vm = new Vue({
             el: "#app",
             created() {
@@ -212,6 +142,7 @@
                 var shop_comment = '';
                 var goods_gallery = '';
                 var format = '';
+                var shop_id = localStorage.getItem('shop_id');
                 /* 获取商品信息 */
                 $.ajax({
                     url: BaseUrl + '/index.php/Api/GoodsApi/goodsDetail',
@@ -222,7 +153,7 @@
                         'goods_id': '2'
                     },
                     success(data) {
-                        // console.log(data);
+                        console.log(data);
                         goods_info = data.data.goods_info;
                         shop_comment = data.data.shop_comment;
                         goods_gallery = data.data.goods_gallery;
@@ -255,9 +186,26 @@
                         console.log(err);
                     }
                 })
+                // 获取评论条数
+                ajax3 = $.ajax({
+                    url:BaseUrl+'/index.php/Api/ShopApi/getCommentCount',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        shop_id:shop_id,
+                        goods_id:'2',
+                        type_id:'1'
+                    },
+                    success(data){
+                        console.log(data);
+                        vm.comments = data.data;
+                        // console.log(comments);
+                    },
+                    error(err){
+                        console.log(err);
+                    }
+                })
                 this.goods_info = goods_info;
-                shop_id = goods_info.shop_id;
-                localStorage.setItem('shop_id',shop_id);
                 this.shop_comment = shop_comment;
                 this.shop_comment.head_pic = BaseUrl + shop_comment.newComment[0].head_pic;
                 this.goods_gallery = goods_gallery;
@@ -282,7 +230,10 @@
                 addActive: false,
                 goods_info: '',
                 goods_gallery: '',
-                format_name: ''
+                format_name: '',
+                comments:{
+
+                }
                 // format:''
             },
             methods: {
@@ -334,6 +285,9 @@
                         this.addActive = false;
                         this.num--;
                     }
+                },
+                getComment(){
+                    
                 },
                 goform() {
                     var a = '';

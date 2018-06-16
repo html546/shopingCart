@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../node_modules/mint-ui/lib/style.css">
     <link rel="stylesheet" href="../css/order_form.css">
     <style>
-        [v-cloak]{
+        [v-cloak] {
             display: none;
         }
     </style>
@@ -23,7 +23,7 @@
                 <mt-button icon="back"></mt-button>
             </a>
         </mt-header>
-        <a href="javascript:;">
+        <a href="./address.html">
             <div class="person_message">
                 <div class="message_top">
                     <p>{{addresses.consignee}}</p>
@@ -40,11 +40,12 @@
             <mt-cell :title='item1.shop_name'>
                 <img src="../images/house.png" width="16" height="16" slot="icon" alt="">
             </mt-cell>
-            <div class="order_panel" v-for="item in order_content" >
+            <div class="order_panel" v-for="item in order_content">
                 <img :src="item.goods_img" alt="">
                 <div class="panel_right">
                     <p>{{item.goods_name}}</p>
                     <p class="format">{{item.goods_spec}}</p>
+                    <div style="clear: both;"></div>
                     <p class="price">￥{{item.price}}</p>
                     <p class="num">×{{item.buy_number}}</p>
                 </div>
@@ -90,78 +91,59 @@
                 /* name: '张强',
                 tel: 13823532943,
                 address: '山东省临沂市兰山区金雀山路与陶然路90号', */
-               /*  order_content: [
-                    { title: '小伟墙材', avatar: '../images/house.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板', format: '蓝色30mm', price: '115.00', num: 5, leave_message: '', freight: '15.00' },
-                    { title: '小伟墙材', avatar: '../images/house.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板', format: '蓝色30mm', price: '115.00', num: 5, leave_message: '',freight: '15.00' }
-                ], */
-                order_content:'',
+                /*  order_content: [
+                     { title: '小伟墙材', avatar: '../images/house.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板', format: '蓝色30mm', price: '115.00', num: 5, leave_message: '', freight: '15.00' },
+                     { title: '小伟墙材', avatar: '../images/house.png', avatar2: '../images/panel_img.png', content: '聚酯纤维吸音板隔音材料幼儿园装饰艺术吸 声板琴房 常熟吸音板', format: '蓝色30mm', price: '115.00', num: 5, leave_message: '',freight: '15.00' }
+                 ], */
+                order_content: '',
                 leave_message: '',
                 debt: '',
                 debt_value: true,
-                debt_money:0,
-                addresses:'',
-                shop_message:'',
-                freight_all:'',
-                price_all:'',
-                num_all:'',
+                debt_money: 0,
+                addresses: '',
+                shop_message: '',
+                freight_all: '',
+                price_all: '',
+                num_all: '',
                 // actul_price:''
             },
-            created(){
+            created() {
                 var cart_id = localStorage.getItem('cart_id');
                 $.ajax({
-                    url:BaseUrl+'/index.php/Api/CartApi/cartConfirm',
-                    type:'post',
-                    dataType:'json',
-                    data:{
-                        'token':'447879569860480420',
-                        'cart_id':cart_id,
-                        'address_id':'6'
+                    url: BaseUrl + '/index.php/Api/CartApi/cartConfirm',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        'token': '447879569860480420',
+                        'cart_id': cart_id,
+                        'address_id': '166'
                     },
-                    success(data){
+                    success(data) {
                         console.log(data);
-                        // Vue.nextTick(()=>{
-                            vm.addresses =data.data.addr_info;
-                            // localStorage.setItem('address',vm.addresses.address);
-                            vm.order_content = data.data.goods_list[0].goods_list;
-                            vm.shop_message = data.data.goods_list;
-                            vm.freight_all = data.data.total_express;
-                            localStorage.setItem('freight_all',vm.freight_all);
-                            vm.price_all = data.data.total_goods_amount;
-                            localStorage.setItem('price_all',vm.price_all);
-                            vm.num_all = data.data.total_goods_num;
-                            localStorage.setItem('num_all',vm.num_all);
-                            vm.debt = data.data.debt_amount;
-                            localStorage.setItem('actul_price',vm.actul_price);
-                            localStorage.setItem('debt_money',vm.debt_money);
-                            // vm.actul_price = data.data.total_amount;
-                        // })
+                        vm.addresses = data.data.addr_info;
+                        vm.order_content = data.data.goods_list[0].goods_list;
+                        vm.shop_message = data.data.goods_list;
+                        vm.freight_all = data.data.total_express;
+                        localStorage.setItem('freight_all', vm.freight_all);
+                        vm.price_all = data.data.total_goods_amount;
+                        localStorage.setItem('price_all', vm.price_all);
+                        vm.num_all = data.data.total_goods_num;
+                        localStorage.setItem('num_all', vm.num_all);
+                        vm.debt = data.data.debt_amount;
+                        localStorage.setItem('actul_price', vm.actul_price);
+                        localStorage.setItem('debt_money', vm.debt_money);
                     },
-                    error(err){
+                    error(err) {
                         console.log(err);
                     }
                 });
             },
             computed: {
-                /* num_all() {
-                    return this.order_content.reduce(function (prev, next) {
-                        return Number(prev) + Number(next.buy_number);
-                    }, 0)
-                }, */
-                /* price_all() {
-                    return this.order_content.reduce(function (prev, next) {
-                        return prev + next.price * next.buy_number;
-                    }, 0)
-                }, */
-                /* freight_all() {
-                    return this.order_content.reduce(function (prev, next) {
-                        return Number(prev) + Number(next.freight);
-                    }, 0)
-                }, */
-                actul_price(){
+                actul_price() {
                     // return this.price_all + this.freight_all - this.debt_money;
-                    if(this.show_debt&&this.debt!=0){
+                    if (this.show_debt && this.debt != 0) {
                         return (Number(this.freight_all) + Number(this.price_all) - Number(this.debt_money)).toFixed(2);
-                    }else{
+                    } else {
                         return (Number(this.freight_all) + Number(this.price_all)).toFixed(2);
                     }
                 }
@@ -177,43 +159,35 @@
                     console.log(event);
                 },
                 entry() {
-                    /* console.log('我是欠条'+this.debt_money);
-                    console.log('我是实际价格'+this.price_all);
-                    console.log(Number(this.debt_money)>Number(this.price_all)); */
-                    if(Number(this.debt_money)>Number(this.price_all)){
-                        // alert(123);
+                    if (Number(this.debt_money) > Number(this.price_all)) {
                         this.$toast({
-                            message:'你输入的金额超出了商品总价了哦',
-                            duration:1000
+                            message: '你输入的金额超出了商品总价了哦',
+                            duration: 1000
                         })
                         this.debt_money = '';
                     }
                 },
-                skip(){
-                    /* var shop_id = [];
-                    this.shop_message.forEach(item=>{
-                        shop_id.push(item.shop_id).join(',');
-                    }) */
+                skip() {
                     $.ajax({
-                        url:BaseUrl+'/index.php/Api/OrderApi/addToOrder',
-                        type:'post',
-                        dataType:'json',
-                        data:{
-                            'token':'447879569860480420',
-                            'address_id':166,
-                            'shop_id':1,
-                            'debt_amount':this.debt
+                        url: BaseUrl + '/index.php/Api/OrderApi/addToOrder',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            'token': '447879569860480420',
+                            'address_id': 166,
+                            'shop_id': 1,
+                            'debt_amount': this.debt
                         },
-                        success(data){
+                        success(data) {
                             console.log(data);
-                            localStorage.setItem('order_sn',data.data.order_sn);
-                            localStorage.setItem('actul_price',data.data.real_pay_amount);
+                            localStorage.setItem('order_sn', data.data.order_sn);
+                            localStorage.setItem('actul_price', data.data.real_pay_amount);
                         },
-                        error(err){
+                        error(err) {
                             console.log(err);
                         }
                     })
-                    window.location.href='./payoff.html';
+                    window.location.href = './payoff.html';
                 }
             }
         })

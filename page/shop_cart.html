@@ -23,29 +23,20 @@
                 <mt-cell :title="item.shop_name">
                     <img class="house" src="../images/house.png" slot="icon" width="16" height="16" alt="">
                 </mt-cell>
-                <mt-cell-swipe v-for="(item1,index) in item.goods_list" title="" :right="[
-                {
-                    content:'删除',
-                    style:{background:'#F74443',color:'#fff'},
-                    handler(){remove(item1,index)}
-                   }
-                ] ">
+                <mt-cell-swipe v-for="(item1,index) in item.goods_list" title="">
                     <div class="order_panel">
                         <div class="checkbox_group">
-                            <input type="checkbox" class="truly_checkbox" @change="checkOne" v-model="item1.is_selected">
+                            <input type="checkbox" class="truly_checkbox" v-model="item1.is_selected">
                             <span class="false_checkbox"></span>
                         </div>
                         <img :src="item1.goods_img" alt="">
                         <div class="panel_right">
                             <p>{{item1.goods_name}}</p>
+                            <p>{{item1.is_valid | valid}}</p>
+                            <div style="clear: both;"></div>
                             <p class="format">{{item1.goods_spec}}</p>
                             <p class="price">￥{{item1.price}}</p>
-                            <p class="num" v-show="edit">×{{item1.buy_number_int}}</p>
-                            <p class="scaler" v-show="!edit">
-                                <button class="reduce" @click="reduce(item1)">-</button>
-                                <input type="number" :value="item1.buy_number_int">
-                                <button class="add" @click="add(item1)">+</button>
-                            </p>
+                            <p class="num">×{{item1.buy_number_int}}</p>
                         </div>
                     </div>
                 </mt-cell-swipe>
@@ -58,7 +49,8 @@
                 <label for="checkAll">全选</label>
             </div>
             <p>合计:￥{{price_all}}</p>
-            <button @click="balance">去结算</button>
+            <button @click="balance" v-show="edit">去结算</button>
+            <button @click="remove" v-show="!edit">删除</button>
         </div>
         <mt-tabbar v-model="selected">
             <mt-tab-item id="首页">
@@ -85,7 +77,6 @@
     <script>
         let vm = new Vue({
             el: "#app",
-            // mixins:[mixin],
             created() {
                 $.ajax({
                     url: BaseUrl + '/index.php/Api/CartApi/getCartList',
@@ -121,7 +112,6 @@
                     for (let i = 0; i < this.products_shop.length; i++) {
                         this.products_shop[i]['goods_list'].forEach(item => {
                             if (item.is_selected == '1') {
-                                // console.log(123);
                                 price_all1 += item.buy_number_int * Number(item.price);
                             }
                         })
@@ -129,51 +119,39 @@
                     return price_all1.toFixed(2);
                 }
             },
+            filters: {
+                valid(val) {
+                    if (val == '1') {
+                        return '';
+                    } else {
+                        return '(无效商品)';
+                    }
+                }
+            },
             methods: {
                 checkAll() {
                     console.log(this.checkAll2);
                     this.products_shop.forEach(item => {
-                        // console.log(item.goods_list);
                         item.goods_list.forEach(item1 => {
                             item1.is_selected = this.checkAll2;
                         })
                     })
                 },
-                checkOne() {
-                    var select_all = ''
-                    for (let i = 0; i < this.products_shop.length; i++) {
-                        /* this.products_shop[i]['goods_list'].reduce((prev, next) => {
-                            return select_all = prev + Number(next.is_selected);
-                        }, 0) */
-                        select_all+=this.products_shop[i]['goods_list'].every(item=>{
-                            return item.is_selected == 1;
-                        })
-                    };
-                    console.log(select_all);
-                    if (select_all == 'true') {
-                        this.checkAll2 = true;
-                    } else {
-                        this.checkAll2 = false;
-                    }
-                },
-                remove(item1, index) {
-                    console.log(item1);
-                    console.log(index);
-                    for (let i = 0; i < this.products_shop.length; i++) {
-                        this.products_shop[i]['goods_list'].forEach(item2 => {
-                            if (item2 == item1) {
-                                this.products_shop[i]['goods_list'].splice(index, 1);
+                remove() {
+                    this.products_shop.forEach(item => {
+                        item.goods_list.forEach(item1 => {
+                            if (item1.is_selected == '1') {
                                 $.ajax({
                                     url: BaseUrl + '/index.php/Api/CartApi/delCartGoods',
                                     type: 'post',
                                     dataType: 'json',
                                     data: {
                                         'token': '447879569860480420',
-                                        'cart_id': item2.cart_id
+                                        'cart_id': item1.cart_id
                                     },
                                     success(data) {
                                         console.log(data);
-                                        remove_all();
+                                        window.location.reload();
                                     },
                                     error(err) {
                                         console.log(err);
@@ -181,59 +159,23 @@
                                 })
                             }
                         })
-                    }
-                },
-                reduce(item2) {
-                    for (let i = 0; i < this.products_shop.length; i++) {
-                        this.products_shop[i]['goods_list'].forEach(item => {
-                            if (item == item2) {
-                                // console.log(item.buy_number_int);
-                                if (item.buy_number_int != 1) {
-                                    item.buy_number_int--;
-                                } else {
-                                    return;
-                                }
-                            }
-                        })
-                    }
-                },
-                add(item2) {
-                    for (let i = 0; i < this.products_shop.length; i++) {
-                        this.products_shop[i]['goods_list'].forEach(item => {
-                            if (item == item2) {
-                                item.buy_number_int++;
-                            }
-                        })
-                    }
+                    })
                 },
                 balance() {
-                    // console.log(this.products_shop);
                     var cart_id_group = [];
-                    this.products_shop.forEach(item=>{
-                        item.goods_list.forEach(item1=>{
+                    this.products_shop.forEach(item => {
+                        item.goods_list.forEach(item1 => {
                             cart_id_group.push(item1.cart_id);
                         })
                     })
                     cart_id_group = cart_id_group.join(',');
                     console.log(cart_id_group);
-                    localStorage.setItem('cart_id',cart_id_group);
+                    localStorage.setItem('cart_id', cart_id_group);
                     window.location.href = "./order_form.html";
                 },
             }
 
         })
-        function remove_all() {
-            console.log(123);
-            for (let i = 0; i < vm.products_shop.length; i++) {
-                console.log(vm.products_shop[i]);
-                if (vm.products_shop[i]['goods_list'].length == 0) {
-                    vm.$nextTick(()=>{
-                        vm.products_shop[i] = [];
-                        vm.$forceUpdate();
-                    })
-                }
-            }
-        }
     </script>
 </body>
 
