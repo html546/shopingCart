@@ -123,13 +123,13 @@
                         })
                     }else{
                         var order_sn = localStorage.getItem('order_sn');
-
+                        var token = GetQueryString('token');
                         $.ajax({
                             url:BaseUrl+'/index.php/Api/OrderApi/orderPay',
                             type:'post',
                             dataType:'json',
                             data:{
-                                'token':'447879569860480420',
+                                'token':token,
                                 'order_sn':order_sn,
                                 'pay_code':this.picked
                             },

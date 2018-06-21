@@ -116,7 +116,7 @@ html, body {
     height: 49px;
     background: #fff;
     position: fixed;
-    bottom: 55px;
+    bottom: 0;
 }
 
 .all_checkbox .truly_checkbox {

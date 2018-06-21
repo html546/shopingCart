@@ -21,16 +21,16 @@
 <body>
     <div id="app" v-cloak>
         <header>
-            <a href="javascript:history.back(-1);" class="arrow_left"></a>
+            <a href="http://navi_back" class="arrow_left"></a>
             <div class="header_tab">
-                <a class="tab-item active" href="./product_detail.html">商品</a>
-                <a class="tab-item" href="./product_detail_content.html">详情</a>
-                <a class="tab-item" href="./product_detail_comment.html">评价</a>
+                <a class="tab-item active" href="javascript:;">商品</a>
+                <a class="tab-item" href="javascript:;">详情</a>
+                <a class="tab-item" href="javascript:;">评价</a>
             </div>
         </header>
-        <div class="content">
+        <div class="content content1">
             <img :src="goods_info.goods_img" alt="">
-            <div class="buy_limit" v-if="goods_info.is_on_sale">
+            <div class="buy_limit" v-if="Number(goods_info.is_on_sale)">
                 <div class="price">
                     <div class="price_left">
                         <p>￥
@@ -42,9 +42,9 @@
                         </div>
                     </div>
                     <div class="time_right">
-                        <div class="hour"></div>
-                        <div class="min"></div>
-                        <div class="sec"></div>
+                        <div class="hour" ref="hour"></div>
+                        <div class="min" ref="min"></div>
+                        <div class="sec" ref="sec"></div>
                     </div>
                 </div>
                 <div class="spec">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div class="buy_normal" v-if="!goods_info.is_on_sale">
+            <div class="buy_normal" v-if="!Number(goods_info.is_on_sale)">
                 <div class="spec">
                     <div class="spec_left">
                         <p class="spec_left_content">
@@ -88,7 +88,7 @@
                 </div>
             </a>
             <div class="evaluate">
-                <a href="javascript:;">
+                <a href="http://comment_list">
                     <div class="evaluate_top num">
                         <p class="num_left">店铺评价</p>
                         <span class="num_right"></span>
@@ -111,6 +111,106 @@
             </div>
             <div class="product_detail">
                 <img v-for="item in goods_gallery" :src="item.image_path" alt="">
+            </div>
+            <div class="cart">
+                <div class="cart_left">
+                    <div class="cart_group">
+                        <a href="javascript:;">
+                            <div class="message">
+                                <div class="message"></div>
+                                <p>私聊</p>
+                            </div>
+                        </a>
+                        <a href="javascript:;">
+                            <div class="shop">
+                                <div class="store"></div>
+                                <p>店铺</p>
+                            </div>
+                        </a>
+                        <a href="./shop_cart.html">
+                            <div class="cart2">
+                                <div class="shop_cart1"></div>
+                                <p>购物车</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="cart_right" @click="cart_show = !cart_show">
+                    <a href="javascript:;">加入购物车</a>
+                </div>
+            </div>
+        </div>
+        <div class="content content2">
+            <div class="product_detail">
+                <img v-for="item in goods_gallery" :src="item.image_path" alt="">
+            </div>
+            <div class="cart">
+                <div class="cart_left">
+                    <div class="cart_group">
+                        <a href="javascript:;">
+                            <div class="message">
+                                <div class="message"></div>
+                                <p>私聊</p>
+                            </div>
+                        </a>
+                        <a href="javascript:;">
+                            <div class="shop">
+                                <div class="store"></div>
+                                <p>店铺</p>
+                            </div>
+                        </a>
+                        <a href="./shop_cart.html">
+                            <div class="cart2">
+                                <div class="shop_cart1"></div>
+                                <p>购物车</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="cart_right" @click="cart_show = !cart_show">
+                    <a href="javascript:;">加入购物车</a>
+                </div>
+            </div>
+        </div>
+        <div class="content content3">
+            <div class="comments">
+                <div class="comments_block active" @click="getComment('all')">
+                    <p>全部</p>
+                    <p>({{comments.commentCount}})</p>
+                </div>
+                <div class="comments_block" @click="getComment('like')">
+                    <p>好评</p>
+                    <p>({{comments.likeCount}})</p>
+                </div>
+                <div class="comments_block" @click="getComment('med')">
+                    <p>中评</p>
+                    <p>({{comments.medCount}})</p>
+                </div>
+                <div class="comments_block" @click="getComment('low')">
+                    <p>差评</p>
+                    <p>({{comments.lowCount}})</p>
+                </div>
+                <div class="comments_block" @click="getComment('img')">
+                    <p>晒图</p>
+                    <p>({{comments.imgCount}})</p>
+                </div>
+            </div>
+            <div class="comments_content">
+                <div class="comments_content_block" v-for="item1 in comments2">
+                    <div class="comments_content_top">
+                        <img :src="item1.head_pic" alt="">
+                        <div class="head_message">
+                            <p>{{item1.user_name}}</p>
+                            <img :src="item1.rank|star" alt="">
+                        </div>
+                        <div class="comments_date">
+                            <p>{{item1.add_time}}</p>
+                        </div>
+                    </div>
+                    <div class="comments_content_bottom">
+                        <p>{{item1.content}}</p>
+                    </div>
+                </div>
             </div>
             <div class="cart">
                 <div class="cart_left">
@@ -176,13 +276,18 @@
     <script>
         $(function () {
             $('.header_tab>a').click(function (e) {
+                //  console.log(e);
+                // console.log($(this).index());
+                var index = $(this).index();
                 $(this).addClass('active').siblings().removeClass('active');
+                console.log($('.content' + (index + 1)));
+                $('.content' + (index + 1)).show().siblings('.content').hide();
             });
         })
         function countTime() {
             var date = new Date();
             var now = date.getTime();
-            var endDate = new Date("2018-06-14 23:23:23");
+            var endDate = new Date("2018/06/21 23:23:23");
             var end = endDate.getTime();
             var leftTime = end - now;
             if (leftTime >= 0) {
@@ -197,14 +302,10 @@
                     return value;
                 }
             }
-            // alert(123);
-            $('.hour').html(h);
-            $('.min').html(m);
-            $('.sec').html(s);
+            vm.$refs.hour.innerHTML = h;
+            vm.$refs.min.innerHTML = m;
+            vm.$refs.sec.innerHTML = s;
         }
-        setInterval(function () {
-            countTime();
-        }, 1000)
         let vm = new Vue({
             el: "#app",
             created() {
@@ -212,6 +313,9 @@
                 var shop_comment = '';
                 var goods_gallery = '';
                 var format = '';
+                // var shop_id = localStorage.getItem('shop_id');
+                var shop_id = GetQueryString('shop_id');
+                var goods_id = GetQueryString('goods_id');
                 /* 获取商品信息 */
                 $.ajax({
                     url: BaseUrl + '/index.php/Api/GoodsApi/goodsDetail',
@@ -219,13 +323,18 @@
                     type: 'post',
                     async: false,
                     data: {
-                        'goods_id': '2'
+                        'goods_id': goods_id
                     },
                     success(data) {
-                        // console.log(data);
+                        console.log(data);
                         goods_info = data.data.goods_info;
                         shop_comment = data.data.shop_comment;
                         goods_gallery = data.data.goods_gallery;
+                        if (Number(goods_info.is_on_sale) == 1) {
+                            setInterval(function () {
+                                countTime();
+                            }, 1000)
+                        }
                         // format = data.data.goods_spec;
                     },
                     error(err) {
@@ -239,7 +348,7 @@
                     type: 'post',
                     async: false,
                     data: {
-                        'goods_id': '2'
+                        'goods_id': goods_id
                     },
                     success(data) {
                         // console.log(data);
@@ -255,9 +364,48 @@
                         console.log(err);
                     }
                 })
+                // 获取评论条数
+                ajax3 = $.ajax({
+                    url: BaseUrl + '/index.php/Api/ShopApi/getCommentCount',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        shop_id: shop_id,
+                        goods_id: goods_id,
+                        type_id: '1'
+                    },
+                    success(data) {
+                        console.log(data);
+                        vm.comments = data.data;
+                        // console.log(comments);
+                    },
+                    error(err) {
+                        console.log(err);
+                    }
+                })
+                $.ajax({
+                    url: BaseUrl + '/index.php/Api/ShopApi/getShopComment',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        shop_id: shop_id,
+                        level: 'all',
+                        type_id: '1'
+                    },
+                    success(data) {
+                        console.log(data);
+                        vm.comments2 = data.data;
+                        vm.comments2.forEach(item => {
+                            item.head_pic = BaseUrl + item.head_pic;
+                        })
+                    },
+                    error(err) {
+                        console.log(err);
+                    }
+                })
                 this.goods_info = goods_info;
                 shop_id = goods_info.shop_id;
-                localStorage.setItem('shop_id',shop_id);
+                localStorage.setItem('shop_id', shop_id);
                 this.shop_comment = shop_comment;
                 this.shop_comment.head_pic = BaseUrl + shop_comment.newComment[0].head_pic;
                 this.goods_gallery = goods_gallery;
@@ -282,11 +430,34 @@
                 addActive: false,
                 goods_info: '',
                 goods_gallery: '',
-                format_name: ''
+                format_name: '',
+                comments: {
+                },
+                comments2: '',
+                hout: '',
+                min: '',
+                sec: ''
                 // format:''
+            },
+            filters: {
+                star(val) {
+                    if (val == '5') {
+                        return '../images/star5.png';
+                    } else if (val == '4') {
+                        return '../images/star4.png';
+                    } else if (val == '3') {
+                        return '../images/star3.png';
+                    } else if (val == '2') {
+                        return '../images/star2.png';
+                    } else {
+                        return '../images/star1.png';
+                    }
+                }
             },
             methods: {
                 changeActive(item, index) {
+                    var token = GetQueryString('token');
+                    var goods_id = GetQueryString('goods_id');
                     this.format.forEach((item1, index) => {
                         if (item1 == item) {
                             // console.log(item);
@@ -296,9 +467,9 @@
                                 type: 'post',
                                 dataType: 'json',
                                 data: {
-                                    'goods_id': '2',
+                                    'goods_id': goods_id,
                                     'spec_key': item1.item_id,
-                                    'token': '447879569860480420'
+                                    'token': token
                                 },
                                 success(data) {
                                     // console.log(data);
@@ -335,7 +506,33 @@
                         this.num--;
                     }
                 },
+                getComment(val) {
+                    // var shop_id = localStorage.getItem('shop_id');
+                    var shop_id = GetQueryString('shop_id');
+                    $.ajax({
+                        url: BaseUrl + '/index.php/Api/ShopApi/getShopComment',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            shop_id: shop_id,
+                            level: val,
+                            type_id: '1'
+                        },
+                        success(data) {
+                            console.log(data);
+                            vm.comments2 = data.data;
+                            vm.comments2.forEach(item => {
+                                item.head_pic = BaseUrl + item.head_pic;
+                            })
+                        },
+                        error(err) {
+                            console.log(err);
+                        }
+                    })
+                },
                 goform() {
+                    var token = GetQueryString('token');
+                    var goods_id = GetQueryString('goods_id');
                     var a = '';
                     a = this.format.every(item => {
                         return item.isActived == false;
@@ -361,8 +558,8 @@
                             type: 'post',
                             dataType: 'json',
                             data: {
-                                token: '447879569860480420',
-                                goods_id: '2',
+                                token: token,
+                                goods_id: goods_id,
                                 spec_key: spec_key,
                                 buy_number: vm.num
                             },
@@ -385,6 +582,11 @@
                     }
                 }
             }
+        })
+        $(function () {
+            $('.comments_block').click(function () {
+                $(this).addClass('active').siblings().removeClass('active');
+            })
         })
     </script>
 </body>

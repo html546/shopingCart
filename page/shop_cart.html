@@ -52,7 +52,7 @@
             <button @click="balance" v-show="edit">去结算</button>
             <button @click="remove" v-show="!edit">删除</button>
         </div>
-        <mt-tabbar v-model="selected">
+        <!-- <mt-tabbar v-model="selected">
             <mt-tab-item id="首页">
                 <img src="../images/tab_icon1.png" width="20" height="20" alt="" slot="icon"> 首页
             </mt-tab-item>
@@ -68,7 +68,7 @@
             <mt-tab-item id="我的">
                 <img src="../images/tab_icon5.png" width="20" height="20" alt="" slot="icon"> 我的
             </mt-tab-item>
-        </mt-tabbar>
+        </mt-tabbar> -->
     </div>
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/vue/dist/vue.js"></script>
@@ -78,12 +78,13 @@
         let vm = new Vue({
             el: "#app",
             created() {
+                var token = GetQueryString('token');
                 $.ajax({
                     url: BaseUrl + '/index.php/Api/CartApi/getCartList',
                     type: 'post',
                     dataType: 'json',
                     data: {
-                        'token': '447879569860480420'
+                        'token': token
                     },
                     success(data) {
                         console.log(data);
@@ -138,6 +139,7 @@
                     })
                 },
                 remove() {
+                    var token = GetQueryString('token');
                     this.products_shop.forEach(item => {
                         item.goods_list.forEach(item1 => {
                             if (item1.is_selected == '1') {
@@ -146,7 +148,7 @@
                                     type: 'post',
                                     dataType: 'json',
                                     data: {
-                                        'token': '447879569860480420',
+                                        'token': token,
                                         'cart_id': item1.cart_id
                                     },
                                     success(data) {
@@ -169,9 +171,9 @@
                         })
                     })
                     cart_id_group = cart_id_group.join(',');
-                    console.log(cart_id_group);
-                    localStorage.setItem('cart_id', cart_id_group);
-                    window.location.href = "./order_form.html";
+                    /* console.log(cart_id_group);
+                    localStorage.setItem('cart_id', cart_id_group); */
+                    window.location.href = "./order_form.html?cart_id"+cart_id_group;
                 },
             }
 

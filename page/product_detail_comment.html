@@ -29,45 +29,45 @@
             </div>
         </header>
         <div class="content">
-           <div class="comments">
-               <div class="comments_block active" @click="getComment">
-                   <p>全部</p>
-                   <p>({{comments.commentCount}})</p>
-               </div>
-               <div class="comments_block" @click="getComment">
-                   <p>好评</p>
-                   <p>({{comments.likeCount}})</p>
-               </div>
-               <div class="comments_block" @click="getComment">
-                   <p>中评</p>
-                   <p>({{comments.medCount}})</p>
-               </div>
-               <div class="comments_block" @click="getComment">
-                   <p>差评</p>
-                   <p>({{comments.lowCount}})</p>
-               </div>
-               <div class="comments_block" @click="getComment">
-                   <p>晒图</p>
-                   <p>({{comments.imgCount}})</p>
-               </div>
-           </div>
-           <div class="comments_content">
-               <div class="comments_content_block">
-                   <div class="comments_content_top">
-                       <img src="../images/head2.png" alt="">
-                       <div class="head_message">
-                           <p>雨***</p>
-                           <img src="../images/star5.png" alt="">
-                       </div>
-                       <div class="comments_date">
-                           <p>2017-06-01</p>
-                       </div>
-                   </div>
-                   <div class="comments_content_bottom">
-                       <p>好评!</p>
-                   </div>
-               </div>
-           </div>
+            <div class="comments">
+                <div class="comments_block active" @click="getComment('all')">
+                    <p>全部</p>
+                    <p>({{comments.commentCount}})</p>
+                </div>
+                <div class="comments_block" @click="getComment('like')">
+                    <p>好评</p>
+                    <p>({{comments.likeCount}})</p>
+                </div>
+                <div class="comments_block" @click="getComment('med')">
+                    <p>中评</p>
+                    <p>({{comments.medCount}})</p>
+                </div>
+                <div class="comments_block" @click="getComment('low')">
+                    <p>差评</p>
+                    <p>({{comments.lowCount}})</p>
+                </div>
+                <div class="comments_block" @click="getComment('img')">
+                    <p>晒图</p>
+                    <p>({{comments.imgCount}})</p>
+                </div>
+            </div>
+            <div class="comments_content">
+                <div class="comments_content_block" v-for="item1 in comments2">
+                    <div class="comments_content_top">
+                        <img :src="item1.head_pic" alt="">
+                        <div class="head_message">
+                            <p>{{item1.user_name}}</p>
+                            <img :src="item1.rank|star" alt="">
+                        </div>
+                        <div class="comments_date">
+                            <p>{{item1.add_time}}</p>
+                        </div>
+                    </div>
+                    <div class="comments_content_bottom">
+                        <p>{{item1.content}}</p>
+                    </div>
+                </div>
+            </div>
             <div class="cart">
                 <div class="cart_left">
                     <div class="cart_group">
@@ -143,6 +143,7 @@
                 var goods_gallery = '';
                 var format = '';
                 var shop_id = localStorage.getItem('shop_id');
+                var goods_id = GetQueryString('goods_id');
                 /* 获取商品信息 */
                 $.ajax({
                     url: BaseUrl + '/index.php/Api/GoodsApi/goodsDetail',
@@ -150,7 +151,7 @@
                     type: 'post',
                     async: false,
                     data: {
-                        'goods_id': '2'
+                        'goods_id': goods_id
                     },
                     success(data) {
                         console.log(data);
@@ -170,7 +171,7 @@
                     type: 'post',
                     async: false,
                     data: {
-                        'goods_id': '2'
+                        'goods_id': goods_id
                     },
                     success(data) {
                         // console.log(data);
@@ -188,20 +189,40 @@
                 })
                 // 获取评论条数
                 ajax3 = $.ajax({
-                    url:BaseUrl+'/index.php/Api/ShopApi/getCommentCount',
-                    type:'post',
-                    dataType:'json',
-                    data:{
-                        shop_id:shop_id,
-                        goods_id:'2',
-                        type_id:'1'
+                    url: BaseUrl + '/index.php/Api/ShopApi/getCommentCount',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        shop_id: shop_id,
+                        goods_id: goods_id,
+                        type_id: '1'
                     },
-                    success(data){
+                    success(data) {
                         console.log(data);
                         vm.comments = data.data;
                         // console.log(comments);
                     },
-                    error(err){
+                    error(err) {
+                        console.log(err);
+                    }
+                })
+                $.ajax({
+                    url: BaseUrl + '/index.php/Api/ShopApi/getShopComment',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        shop_id: shop_id,
+                        level: 'all',
+                        type_id: '1'
+                    },
+                    success(data) {
+                        console.log(data);
+                        vm.comments2 = data.data;
+                        vm.comments2.forEach(item => {
+                            item.head_pic = BaseUrl + item.head_pic;
+                        })
+                    },
+                    error(err) {
                         console.log(err);
                     }
                 })
@@ -231,13 +252,31 @@
                 goods_info: '',
                 goods_gallery: '',
                 format_name: '',
-                comments:{
+                comments: {
 
-                }
+                },
+                comments2: ''
                 // format:''
+            },
+            filters:{
+                star(val){
+                    if(val == '5'){
+                        return '../images/star5.png';
+                    }else if(val == '4'){
+                        return '../images/star4.png';
+                    }else if(val == '3'){
+                        return '../images/star3.png';
+                    }else if(val == '2'){
+                        return '../images/star2.png';
+                    }else{
+                        return '../images/star1.png';
+                    }
+                }
             },
             methods: {
                 changeActive(item, index) {
+                    var token = GetQueryString('token');
+                    var goods_id = GetQueryString('goods_id');
                     this.format.forEach((item1, index) => {
                         if (item1 == item) {
                             // console.log(item);
@@ -247,9 +286,9 @@
                                 type: 'post',
                                 dataType: 'json',
                                 data: {
-                                    'goods_id': '2',
+                                    'goods_id': goods_id,
                                     'spec_key': item1.item_id,
-                                    'token': '447879569860480420'
+                                    'token': token
                                 },
                                 success(data) {
                                     // console.log(data);
@@ -286,11 +325,33 @@
                         this.num--;
                     }
                 },
-                getComment(){
-                    
+                getComment(val) {
+                    var shop_id = localStorage.getItem('shop_id');
+                    $.ajax({
+                        url: BaseUrl + '/index.php/Api/ShopApi/getShopComment',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            shop_id: shop_id,
+                            level: val,
+                            type_id: '1'
+                        },
+                        success(data) {
+                            console.log(data);
+                            vm.comments2 = data.data;
+                            vm.comments2.forEach(item => {
+                                item.head_pic = BaseUrl + item.head_pic;
+                            })
+                        },
+                        error(err) {
+                            console.log(err);
+                        }
+                    })
                 },
                 goform() {
                     var a = '';
+                    var goods_id = GetQueryString('goods_id');
+                    var token = GetQueryString('token');
                     a = this.format.every(item => {
                         return item.isActived == false;
                     });
@@ -315,8 +376,8 @@
                             type: 'post',
                             dataType: 'json',
                             data: {
-                                token: '447879569860480420',
-                                goods_id: '2',
+                                token: token,
+                                goods_id: goods_id,
                                 spec_key: spec_key,
                                 buy_number: vm.num
                             },
@@ -339,6 +400,11 @@
                     }
                 }
             }
+        })
+        $(function () {
+            $('.comments_block').click(function () {
+                $(this).addClass('active').siblings().removeClass('active');
+            })
         })
     </script>
 </body>

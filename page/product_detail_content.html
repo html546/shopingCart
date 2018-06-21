@@ -106,6 +106,7 @@
                 var shop_comment = '';
                 var goods_gallery = '';
                 var format = '';
+                var goods_id = GetQueryString('goods_id');
                 /* 获取商品信息 */
                 $.ajax({
                     url: BaseUrl + '/index.php/Api/GoodsApi/goodsDetail',
@@ -113,7 +114,7 @@
                     type: 'post',
                     async: false,
                     data: {
-                        'goods_id': '2'
+                        'goods_id': goods_id
                     },
                     success(data) {
                         console.log(data);
@@ -133,7 +134,7 @@
                     type: 'post',
                     async: false,
                     data: {
-                        'goods_id': '2'
+                        'goods_id': goods_id
                     },
                     success(data) {
                         // console.log(data);
@@ -179,6 +180,8 @@
             },
             methods: {
                 changeActive(item, index) {
+                    var token = GetQueryString('token');
+                    var goods_id = GetQueryString('goods_id');
                     this.format.forEach((item1, index) => {
                         if (item1 == item) {
                             // console.log(item);
@@ -188,9 +191,9 @@
                                 type: 'post',
                                 dataType: 'json',
                                 data: {
-                                    'goods_id': '2',
+                                    'goods_id': goods_id,
                                     'spec_key': item1.item_id,
-                                    'token': '447879569860480420'
+                                    'token': token
                                 },
                                 success(data) {
                                     // console.log(data);
@@ -229,6 +232,8 @@
                 },
                 goform() {
                     var a = '';
+                    var token = GetQueryString('token');
+                    var goods_id = GetQueryString('goods_id');
                     a = this.format.every(item => {
                         return item.isActived == false;
                     });
@@ -253,8 +258,8 @@
                             type: 'post',
                             dataType: 'json',
                             data: {
-                                token: '447879569860480420',
-                                goods_id: '2',
+                                token: token,
+                                goods_id: goods_id,
                                 spec_key: spec_key,
                                 buy_number: vm.num
                             },

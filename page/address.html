@@ -45,12 +45,13 @@
                 picked: ''
             },
             created(){
+                var token = GetQueryString('token');
                 $.ajax({
                     url:BaseUrl+'/index.php/Api/UserCenterApi/getAddressList',
                     dataType:'json',
                     type:'post',
                     data:{
-                        'token':'447879569860480420'
+                        'token':token
                     },
                     success(data){
                         console.log(data.data);

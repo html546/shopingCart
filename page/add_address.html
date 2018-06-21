@@ -201,12 +201,13 @@
                     this.popupVisible = true;
                 },
                 save(){
+                    var token = GetQueryString('token');
                     $.ajax({
                         url:BaseUrl+'/index.php/Api/UserCenterApi/addEditAddress',
                         type:'post',
                         dataType:'json',
                         data:{
-                            'token':'447879569860480420',
+                            'token':token,
                             'consignee':this.consignee,
                             'mobile':this.tel,
                             'province':this.value1.split('-').splice(0,1).join(),

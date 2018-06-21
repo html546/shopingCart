@@ -108,15 +108,18 @@
                 // actul_price:''
             },
             created() {
-                var cart_id = localStorage.getItem('cart_id');
+                // var cart_id = localStorage.getItem('cart_id');
+                var cart_id = GetQueryString('cart_id');
+                var address_id = GetQueryString('address_id');
+                var token = GetQueryString('token');
                 $.ajax({
                     url: BaseUrl + '/index.php/Api/CartApi/cartConfirm',
                     type: 'post',
                     dataType: 'json',
                     data: {
-                        'token': '447879569860480420',
+                        'token': token,
                         'cart_id': cart_id,
-                        'address_id': '166'
+                        'address_id': address_id
                     },
                     success(data) {
                         console.log(data);
@@ -168,18 +171,19 @@
                     }
                 },
                 skip() {
+                    var token = GetQueryString('token');
                     $.ajax({
                         url: BaseUrl + '/index.php/Api/OrderApi/addToOrder',
                         type: 'post',
                         dataType: 'json',
                         data: {
-                            'token': '447879569860480420',
-                            'address_id': 166,
+                            'token': token,
+                            'address_id': address_id,
                             'shop_id': 1,
                             'debt_amount': this.debt
                         },
                         success(data) {
-                            console.log(data);
+                            // console.log(data);
                             localStorage.setItem('order_sn', data.data.order_sn);
                             localStorage.setItem('actul_price', data.data.real_pay_amount);
                         },
